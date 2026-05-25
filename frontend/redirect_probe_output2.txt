@@ -1,0 +1,133 @@
+﻿{
+  "loginUrl": "http://127.0.0.1:8000/login",
+  "initialEmail": "",
+  "initialPassword": "",
+  "postLoginUrl": "http://127.0.0.1:8000/dashboard",
+  "dashboardVisible": true,
+  "loginAgainUrl": "http://127.0.0.1:8000/dashboard",
+  "loginAgainRedirected": true,
+  "loginAgainTarget": "http://127.0.0.1:8000/dashboard",
+  "network": [
+    {
+      "stage": "request",
+      "url": "http://127.0.0.1:8000/login",
+      "method": "GET",
+      "resourceType": "document"
+    },
+    {
+      "stage": "response",
+      "url": "http://127.0.0.1:8000/login",
+      "status": 200,
+      "resourceType": "document"
+    },
+    {
+      "stage": "request",
+      "url": "http://127.0.0.1:8000/api/cookie-consents/visitor_1779200041581_i01dxn38h",
+      "method": "GET",
+      "resourceType": "xhr"
+    },
+    {
+      "stage": "request",
+      "url": "http://127.0.0.1:8000/api/user",
+      "method": "GET",
+      "resourceType": "xhr"
+    },
+    {
+      "stage": "response",
+      "url": "http://127.0.0.1:8000/api/cookie-consents/visitor_1779200041581_i01dxn38h",
+      "status": 204,
+      "resourceType": "xhr"
+    },
+    {
+      "stage": "response",
+      "url": "http://127.0.0.1:8000/api/user",
+      "status": 204,
+      "resourceType": "xhr"
+    },
+    {
+      "stage": "request",
+      "url": "http://127.0.0.1:8000/sanctum/csrf-cookie",
+      "method": "GET",
+      "resourceType": "xhr"
+    },
+    {
+      "stage": "response",
+      "url": "http://127.0.0.1:8000/sanctum/csrf-cookie",
+      "status": 204,
+      "resourceType": "xhr"
+    },
+    {
+      "stage": "request",
+      "url": "http://127.0.0.1:8000/api/login",
+      "method": "POST",
+      "resourceType": "xhr"
+    },
+    {
+      "stage": "response",
+      "url": "http://127.0.0.1:8000/api/login",
+      "status": 200,
+      "resourceType": "xhr"
+    },
+    {
+      "stage": "request",
+      "url": "http://127.0.0.1:8000/login",
+      "method": "GET",
+      "resourceType": "document"
+    },
+    {
+      "stage": "response",
+      "url": "http://127.0.0.1:8000/login",
+      "status": 200,
+      "resourceType": "document"
+    },
+    {
+      "stage": "request",
+      "url": "http://127.0.0.1:8000/api/cookie-consents/visitor_1779200041581_i01dxn38h",
+      "method": "GET",
+      "resourceType": "xhr"
+    },
+    {
+      "stage": "request",
+      "url": "http://127.0.0.1:8000/api/user",
+      "method": "GET",
+      "resourceType": "xhr"
+    },
+    {
+      "stage": "response",
+      "url": "http://127.0.0.1:8000/api/cookie-consents/visitor_1779200041581_i01dxn38h",
+      "status": 204,
+      "resourceType": "xhr"
+    },
+    {
+      "stage": "response",
+      "url": "http://127.0.0.1:8000/api/user",
+      "status": 200,
+      "resourceType": "xhr"
+    },
+    {
+      "stage": "request",
+      "url": "http://127.0.0.1:8000/api/posts?perPage=5",
+      "method": "GET",
+      "resourceType": "xhr"
+    },
+    {
+      "stage": "request",
+      "url": "http://127.0.0.1:8000/api/events?perPage=5",
+      "method": "GET",
+      "resourceType": "xhr"
+    },
+    {
+      "stage": "response",
+      "url": "http://127.0.0.1:8000/api/posts?perPage=5",
+      "status": 200,
+      "resourceType": "xhr"
+    },
+    {
+      "stage": "response",
+      "url": "http://127.0.0.1:8000/api/events?perPage=5",
+      "status": 200,
+      "resourceType": "xhr"
+    }
+  ],
+  "submitLogs": []
+}

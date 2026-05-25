@@ -1,0 +1,675 @@
+-- ===============================
+-- FG Degree College Database Schema
+-- Complete MySQL Database Structure
+-- ===============================
+
+-- 1. USERS TABLE (Authentication & User Management)
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    role ENUM('admin', 'principal', 'teacher', 'student', 'staff') NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    phone VARCHAR(20),
+    avatar_url VARCHAR(255),
+    is_active BOOLEAN DEFAULT TRUE,
+    last_login DATETIME,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- 2. DEPARTMENTS TABLE
+CREATE TABLE departments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    short_name VARCHAR(10),
+    description TEXT,
+    head_teacher_id INT,
+    established_year YEAR,
+    office_location VARCHAR(100),
+    email VARCHAR(100),
+    phone VARCHAR(20),
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (head_teacher_id) REFERENCES users(id)
+);
+
+-- 3. PROGRAMS TABLE
+CREATE TABLE programs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    short_name VARCHAR(20),
+    program_type ENUM('HSSC', 'BS', 'Certificate') NOT NULL,
+    department_id INT,
+    duration_years INT DEFAULT 2,
+    total_seats INT DEFAULT 50,
+    fee_per_semester DECIMAL(10,2),
+    eligibility_criteria TEXT,
+    description TEXT,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (department_id) REFERENCES departments(id)
+);
+
+-- 4. SUBJECTS TABLE
+CREATE TABLE subjects (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    subject_code VARCHAR(20) UNIQUE,
+    credit_hours INT DEFAULT 3,
+    department_id INT,
+    is_compulsory BOOLEAN DEFAULT FALSE,
+    description TEXT,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (department_id) REFERENCES departments(id)
+);
+
+-- 5. PROGRAM_SUBJECTS TABLE (Many-to-Many relationship)
+CREATE TABLE program_subjects (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    program_id INT NOT NULL,
+    subject_id INT NOT NULL,
+    semester INT NOT NULL,
+    is_compulsory BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (program_id) REFERENCES programs(id) ON DELETE CASCADE,
+    FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_program_subject_semester (program_id, subject_id, semester)
+);
+
+-- 6. STUDENTS TABLE
+CREATE TABLE students (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNIQUE,
+    student_id VARCHAR(20) UNIQUE NOT NULL,
+    roll_number VARCHAR(20),
+    program_id INT,
+    batch_year YEAR,
+    semester INT DEFAULT 1,
+    father_name VARCHAR(100) NOT NULL,
+    mother_name VARCHAR(100),
+    date_of_birth DATE NOT NULL,
+    cnic VARCHAR(15) UNIQUE,
+    nationality VARCHAR(50) DEFAULT 'Pakistani',
+    religion VARCHAR(50),
+    blood_group VARCHAR(5),
+    address TEXT NOT NULL,
+    city VARCHAR(50) NOT NULL,
+    district VARCHAR(50) NOT NULL,
+    guardian_name VARCHAR(100) NOT NULL,
+    guardian_relation VARCHAR(50) NOT NULL,
+    guardian_phone VARCHAR(20) NOT NULL,
+    guardian_occupation VARCHAR(100),
+    emergency_contact_name VARCHAR(100) NOT NULL,
+    emergency_contact_phone VARCHAR(20) NOT NULL,
+    emergency_contact_relation VARCHAR(50) NOT NULL,
+    previous_school VARCHAR(200),
+    matric_board VARCHAR(100),
+    matric_year YEAR,
+    matric_obtained_marks INT,
+    matric_total_marks INT,
+    admission_date DATE,
+    fee_status ENUM('paid', 'pending', 'partial', 'overdue') DEFAULT 'pending',
+    status ENUM('active', 'inactive', 'graduated', 'dropout') DEFAULT 'active',
+    extracurricular_activities TEXT,
+    achievements TEXT,
+    medical_conditions TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (program_id) REFERENCES programs(id)
+);
+
+-- 7. TEACHERS TABLE
+CREATE TABLE teachers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT UNIQUE,
+    teacher_id VARCHAR(20) UNIQUE NOT NULL,
+    designation VARCHAR(100),
+    qualification VARCHAR(200),
+    specialization VARCHAR(100),
+    department_id INT,
+    date_of_joining DATE,
+    salary DECIMAL(10,2),
+    experience_years INT DEFAULT 0,
+    cnic VARCHAR(15) UNIQUE,
+    date_of_birth DATE,
+    address TEXT,
+    emergency_contact VARCHAR(100),
+    emergency_phone VARCHAR(20),
+    status ENUM('active', 'inactive', 'on_leave') DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (department_id) REFERENCES departments(id)
+);
+
+-- 8. COURSES TABLE (Course Offerings per Semester)
+CREATE TABLE courses (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    subject_id INT NOT NULL,
+    program_id INT NOT NULL,
+    teacher_id INT,
+    semester INT NOT NULL,
+    academic_year VARCHAR(9), -- e.g., "2024-2025"
+    section VARCHAR(5) DEFAULT 'A',
+    max_students INT DEFAULT 40,
+    enrolled_students INT DEFAULT 0,
+    room_number VARCHAR(20),
+    schedule TEXT, -- JSON format for class timings
+    status ENUM('active', 'completed', 'cancelled') DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (subject_id) REFERENCES subjects(id),
+    FOREIGN KEY (program_id) REFERENCES programs(id),
+    FOREIGN KEY (teacher_id) REFERENCES teachers(id)
+);
+
+-- 9. STUDENT_COURSES TABLE (Enrollment)
+CREATE TABLE student_courses (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    course_id INT NOT NULL,
+    enrollment_date DATE DEFAULT (CURRENT_DATE),
+    attendance_percentage DECIMAL(5,2) DEFAULT 0.00,
+    internal_marks DECIMAL(5,2) DEFAULT 0.00,
+    final_marks DECIMAL(5,2) DEFAULT 0.00,
+    total_marks DECIMAL(5,2) DEFAULT 0.00,
+    grade VARCHAR(5),
+    status ENUM('enrolled', 'completed', 'dropped') DEFAULT 'enrolled',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_student_course (student_id, course_id)
+);
+
+-- 10. ATTENDANCE TABLE
+CREATE TABLE attendance (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    course_id INT NOT NULL,
+    attendance_date DATE NOT NULL,
+    status ENUM('present', 'absent', 'late', 'excused') NOT NULL,
+    remarks TEXT,
+    marked_by INT, -- teacher who marked attendance
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+    FOREIGN KEY (marked_by) REFERENCES teachers(id),
+    UNIQUE KEY unique_student_course_date (student_id, course_id, attendance_date)
+);
+
+-- 11. EXAMINATIONS TABLE
+CREATE TABLE examinations (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    exam_type ENUM('mid_term', 'final_term', 'quiz', 'assignment', 'practical') NOT NULL,
+    course_id INT NOT NULL,
+    total_marks INT DEFAULT 100,
+    exam_date DATE,
+    duration_minutes INT DEFAULT 180,
+    instructions TEXT,
+    status ENUM('scheduled', 'ongoing', 'completed', 'cancelled') DEFAULT 'scheduled',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
+);
+
+-- 12. STUDENT_EXAM_RESULTS TABLE
+CREATE TABLE student_exam_results (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    examination_id INT NOT NULL,
+    obtained_marks DECIMAL(5,2) DEFAULT 0.00,
+    grade VARCHAR(5),
+    remarks TEXT,
+    is_absent BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+    FOREIGN KEY (examination_id) REFERENCES examinations(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_student_exam (student_id, examination_id)
+);
+
+-- 13. FEE_STRUCTURE TABLE
+CREATE TABLE fee_structure (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    program_id INT NOT NULL,
+    fee_type ENUM('admission', 'tuition', 'examination', 'library', 'laboratory', 'sports', 'miscellaneous') NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
+    academic_year VARCHAR(9),
+    semester INT,
+    is_one_time BOOLEAN DEFAULT FALSE,
+    description TEXT,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (program_id) REFERENCES programs(id) ON DELETE CASCADE
+);
+
+-- 14. STUDENT_FEES TABLE
+CREATE TABLE student_fees (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    fee_structure_id INT NOT NULL,
+    amount_due DECIMAL(10,2) NOT NULL,
+    amount_paid DECIMAL(10,2) DEFAULT 0.00,
+    due_date DATE,
+    paid_date DATE,
+    payment_method VARCHAR(50),
+    transaction_id VARCHAR(100),
+    late_fee DECIMAL(10,2) DEFAULT 0.00,
+    status ENUM('pending', 'paid', 'partial', 'overdue') DEFAULT 'pending',
+    remarks TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+    FOREIGN KEY (fee_structure_id) REFERENCES fee_structure(id)
+);
+
+-- 15. NOTICES TABLE
+CREATE TABLE notices (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    content TEXT NOT NULL,
+    category ENUM('general', 'academic', 'examination', 'fee', 'sports', 'cultural', 'urgent') DEFAULT 'general',
+    target_audience ENUM('all', 'students', 'teachers', 'staff', 'parents') DEFAULT 'all',
+    program_id INT, -- specific program if applicable
+    is_urgent BOOLEAN DEFAULT FALSE,
+    is_published BOOLEAN DEFAULT FALSE,
+    published_date DATE,
+    expiry_date DATE,
+    attachment_url VARCHAR(255),
+    created_by INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (program_id) REFERENCES programs(id),
+    FOREIGN KEY (created_by) REFERENCES users(id)
+);
+
+-- 16. EVENTS TABLE
+CREATE TABLE events (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    description TEXT,
+    event_type ENUM('academic', 'sports', 'cultural', 'seminar', 'workshop', 'examination') NOT NULL,
+    event_date DATE NOT NULL,
+    start_time TIME,
+    end_time TIME,
+    venue VARCHAR(200),
+    organizer VARCHAR(100),
+    max_participants INT,
+    registration_required BOOLEAN DEFAULT FALSE,
+    registration_deadline DATE,
+    is_published BOOLEAN DEFAULT FALSE,
+    banner_image_url VARCHAR(255),
+    created_by INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (created_by) REFERENCES users(id)
+);
+
+-- 17. LIBRARY_BOOKS TABLE
+CREATE TABLE library_books (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    isbn VARCHAR(20) UNIQUE,
+    title VARCHAR(200) NOT NULL,
+    author VARCHAR(200) NOT NULL,
+    publisher VARCHAR(100),
+    publication_year YEAR,
+    category VARCHAR(100),
+    subject_id INT,
+    total_copies INT DEFAULT 1,
+    available_copies INT DEFAULT 1,
+    location VARCHAR(50), -- shelf location
+    is_available BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (subject_id) REFERENCES subjects(id)
+);
+
+-- 18. BOOK_ISSUES TABLE
+CREATE TABLE book_issues (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    book_id INT NOT NULL,
+    student_id INT NOT NULL,
+    issue_date DATE DEFAULT (CURRENT_DATE),
+    due_date DATE NOT NULL,
+    return_date DATE,
+    fine_amount DECIMAL(10,2) DEFAULT 0.00,
+    status ENUM('issued', 'returned', 'lost', 'overdue') DEFAULT 'issued',
+    remarks TEXT,
+    issued_by INT, -- librarian user_id
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (book_id) REFERENCES library_books(id),
+    FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+    FOREIGN KEY (issued_by) REFERENCES users(id)
+);
+
+-- 19. GALLERY ITEMS TABLE
+CREATE TABLE gallery_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    description TEXT,
+    category ENUM('academic', 'sports', 'cultural', 'achievements', 'facilities') NOT NULL,
+    media_type ENUM('image', 'video') DEFAULT 'image',
+    media_url VARCHAR(255) NOT NULL,
+    thumbnail_url VARCHAR(255),
+    event_date DATE,
+    is_featured BOOLEAN DEFAULT FALSE,
+    view_count INT DEFAULT 0,
+    uploaded_by INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (uploaded_by) REFERENCES users(id)
+);
+
+-- 20. TIMETABLES TABLE
+CREATE TABLE timetables (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    program_id INT NOT NULL,
+    semester INT NOT NULL,
+    academic_year VARCHAR(9) NOT NULL,
+    day_of_week ENUM('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday') NOT NULL,
+    time_slot VARCHAR(20) NOT NULL, -- e.g., "08:00-09:00"
+    subject_id INT NOT NULL,
+    teacher_id INT,
+    room_number VARCHAR(20),
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (program_id) REFERENCES programs(id),
+    FOREIGN KEY (subject_id) REFERENCES subjects(id),
+    FOREIGN KEY (teacher_id) REFERENCES teachers(id)
+);
+
+-- 21. ADMISSIONS TABLE (For Online Applications)
+CREATE TABLE admissions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    application_number VARCHAR(20) UNIQUE NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    father_name VARCHAR(100) NOT NULL,
+    date_of_birth DATE NOT NULL,
+    cnic VARCHAR(15) UNIQUE,
+    phone VARCHAR(20) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    address TEXT NOT NULL,
+    city VARCHAR(50) NOT NULL,
+    district VARCHAR(50) NOT NULL,
+    nationality VARCHAR(50) DEFAULT 'Pakistani',
+    religion VARCHAR(50),
+    blood_group VARCHAR(5),
+    program_id INT NOT NULL,
+    previous_school VARCHAR(200),
+    matric_board VARCHAR(100),
+    matric_year YEAR,
+    matric_obtained_marks INT,
+    matric_total_marks INT,
+    guardian_name VARCHAR(100) NOT NULL,
+    guardian_relation VARCHAR(50) NOT NULL,
+    guardian_phone VARCHAR(20) NOT NULL,
+    guardian_occupation VARCHAR(100),
+    emergency_contact_name VARCHAR(100) NOT NULL,
+    emergency_contact_phone VARCHAR(20) NOT NULL,
+    emergency_contact_relation VARCHAR(50) NOT NULL,
+    extracurricular_activities TEXT,
+    achievements TEXT,
+    medical_conditions TEXT,
+    application_status ENUM('pending', 'under_review', 'accepted', 'rejected', 'waitlisted') DEFAULT 'pending',
+    interview_date DATE,
+    interview_status ENUM('pending', 'scheduled', 'completed', 'not_required') DEFAULT 'pending',
+    admission_test_score DECIMAL(5,2),
+    merit_position INT,
+    fee_paid BOOLEAN DEFAULT FALSE,
+    documents_verified BOOLEAN DEFAULT FALSE,
+    remarks TEXT,
+    processed_by INT, -- admin user who processed the application
+    applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    processed_at TIMESTAMP NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (program_id) REFERENCES programs(id),
+    FOREIGN KEY (processed_by) REFERENCES users(id)
+);
+
+-- 22. CONTACT_MESSAGES TABLE
+CREATE TABLE contact_messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    phone VARCHAR(20),
+    category ENUM('admission', 'academic', 'examination', 'fee', 'complaint', 'suggestion', 'other') NOT NULL,
+    department VARCHAR(100),
+    subject VARCHAR(200) NOT NULL,
+    message TEXT NOT NULL,
+    status ENUM('new', 'in_progress', 'resolved', 'closed') DEFAULT 'new',
+    assigned_to INT, -- staff member assigned to handle
+    response TEXT,
+    priority ENUM('low', 'medium', 'high', 'urgent') DEFAULT 'medium',
+    responded_at TIMESTAMP NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (assigned_to) REFERENCES users(id)
+);
+
+-- 23. SYSTEM_SETTINGS TABLE
+CREATE TABLE system_settings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    setting_key VARCHAR(100) UNIQUE NOT NULL,
+    setting_value TEXT,
+    setting_type ENUM('text', 'number', 'boolean', 'json') DEFAULT 'text',
+    description TEXT,
+    is_public BOOLEAN DEFAULT FALSE, -- whether setting can be viewed by non-admins
+    updated_by INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (updated_by) REFERENCES users(id)
+);
+
+-- ===============================
+-- SAMPLE DATA INSERTION QUERIES
+-- ===============================
+
+-- Insert default admin user
+INSERT INTO users (username, email, password_hash, role, first_name, last_name, phone) VALUES
+('admin', 'admin@fgcollege.edu.pk', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 'System', 'Administrator', '+92-923-123456'),
+('principal', 'principal@fgcollege.edu.pk', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'principal', 'Muhammad', 'Ishaq', '+92-923-123457');
+
+-- Insert departments
+INSERT INTO departments (name, short_name, description, established_year, office_location, email, phone) VALUES
+('Computer Science', 'CS', 'Department of Computer Science and Information Technology', 2010, 'CS Block, Room 101', 'cs@fgcollege.edu.pk', '+92-923-123456'),
+('Mathematics', 'MATH', 'Department of Mathematics and Statistics', 1995, 'Academic Block, Room 205', 'math@fgcollege.edu.pk', '+92-923-123457'),
+('Physics', 'PHY', 'Department of Physics and Applied Sciences', 1990, 'Science Block, Room 301', 'physics@fgcollege.edu.pk', '+92-923-123458'),
+('English', 'ENG', 'Department of English Language and Literature', 1985, 'Arts Block, Room 102', 'english@fgcollege.edu.pk', '+92-923-123459'),
+('Chemistry', 'CHEM', 'Department of Chemistry', 1987, 'Science Block, Room 201', 'chemistry@fgcollege.edu.pk', '+92-923-123460'),
+('Biology', 'BIO', 'Department of Biology and Life Sciences', 1987, 'Science Block, Room 401', 'biology@fgcollege.edu.pk', '+92-923-123461');
+
+-- Insert programs
+INSERT INTO programs (name, short_name, program_type, department_id, duration_years, total_seats, fee_per_semester, eligibility_criteria, description) VALUES
+('HSSC Pre-Medical', 'HSSC-PM', 'HSSC', 5, 2, 120, 15000.00, 'Minimum 60% in SSC with Science subjects', 'Higher Secondary School Certificate in Pre-Medical track'),
+('HSSC Pre-Engineering', 'HSSC-PE', 'HSSC', 3, 2, 120, 15000.00, 'Minimum 60% in SSC with Mathematics and Science', 'Higher Secondary School Certificate in Pre-Engineering track'),
+('HSSC Computer Science', 'HSSC-CS', 'HSSC', 1, 2, 80, 16000.00, 'Minimum 55% in SSC with Mathematics', 'Higher Secondary School Certificate in Computer Science'),
+('HSSC Faculty of Arts', 'HSSC-FA', 'HSSC', 4, 2, 80, 12000.00, 'Minimum 50% in SSC', 'Higher Secondary School Certificate in Arts'),
+('HSSC Commerce', 'HSSC-COM', 'HSSC', 4, 2, 80, 13000.00, 'Minimum 50% in SSC', 'Higher Secondary School Certificate in Commerce'),
+('BS Computer Science', 'BS-CS', 'BS', 1, 4, 60, 25000.00, 'Minimum 50% in HSSC or equivalent', 'Bachelor of Science in Computer Science'),
+('BS English', 'BS-ENG', 'BS', 4, 4, 60, 20000.00, 'Minimum 45% in HSSC or equivalent', 'Bachelor of Science in English Language and Literature'),
+('BS Physics', 'BS-PHY', 'BS', 3, 4, 40, 22000.00, 'Minimum 50% in HSSC (Pre-Engineering)', 'Bachelor of Science in Physics'),
+('BS Mathematics', 'BS-MATH', 'BS', 2, 4, 40, 20000.00, 'Minimum 50% in HSSC with Mathematics', 'Bachelor of Science in Mathematics');
+
+-- Insert sample subjects
+INSERT INTO subjects (name, subject_code, credit_hours, department_id, is_compulsory) VALUES
+('English', 'ENG101', 3, 4, TRUE),
+('Urdu', 'URD101', 3, 4, TRUE),
+('Islamic Studies', 'ISL101', 2, 4, TRUE),
+('Pakistan Studies', 'PAK101', 2, 4, TRUE),
+('Mathematics', 'MATH101', 4, 2, FALSE),
+('Physics', 'PHY101', 4, 3, FALSE),
+('Chemistry', 'CHEM101', 4, 5, FALSE),
+('Biology', 'BIO101', 4, 6, FALSE),
+('Computer Science', 'CS101', 4, 1, FALSE),
+('Statistics', 'STAT101', 3, 2, FALSE);
+
+-- Insert fee structure
+INSERT INTO fee_structure (program_id, fee_type, amount, academic_year, semester, is_one_time, description) VALUES
+(1, 'admission', 5000.00, '2024-2025', NULL, TRUE, 'One-time admission fee'),
+(1, 'tuition', 15000.00, '2024-2025', 1, FALSE, 'Tuition fee for semester 1'),
+(1, 'examination', 2000.00, '2024-2025', 1, FALSE, 'Examination fee'),
+(1, 'library', 1000.00, '2024-2025', NULL, TRUE, 'Annual library fee'),
+(2, 'admission', 5000.00, '2024-2025', NULL, TRUE, 'One-time admission fee'),
+(2, 'tuition', 15000.00, '2024-2025', 1, FALSE, 'Tuition fee for semester 1'),
+(6, 'admission', 8000.00, '2024-2025', NULL, TRUE, 'One-time admission fee for BS program'),
+(6, 'tuition', 25000.00, '2024-2025', 1, FALSE, 'Tuition fee for semester 1');
+
+-- Insert sample notices
+INSERT INTO notices (title, content, category, target_audience, is_urgent, is_published, published_date, created_by) VALUES
+('Mid-Term Examination Schedule', 'Mid-term examinations will commence from May 20, 2024. Students must bring their admit cards and follow examination guidelines.', 'examination', 'students', TRUE, TRUE, '2024-05-10', 1),
+('Library Book Return Deadline', 'All borrowed books must be returned by May 15, 2024, before the examination period begins.', 'general', 'students', FALSE, TRUE, '2024-05-08', 1),
+('Sports Week Registration Open', 'Registration for annual sports week is now open. Last date to register is May 12, 2024.', 'sports', 'students', FALSE, TRUE, '2024-05-05', 1);
+
+-- Insert system settings
+INSERT INTO system_settings (setting_key, setting_value, setting_type, description, is_public) VALUES
+('college_name', 'FG Degree College for Boys, Nowshera Cantt', 'text', 'Official college name', TRUE),
+('college_address', 'Nowshera Cantt, KPK, Pakistan', 'text', 'College address', TRUE),
+('college_phone', '+92-923-123456', 'text', 'Main college phone number', TRUE),
+('college_email', 'info@fgcollege.edu.pk', 'text', 'Main college email', TRUE),
+('academic_year', '2024-2025', 'text', 'Current academic year', TRUE),
+('admission_open', 'true', 'boolean', 'Whether admissions are currently open', TRUE),
+('examination_fee', '2000', 'number', 'Standard examination fee', FALSE);
+
+-- ===============================
+-- USEFUL QUERIES FOR WEBSITE FUNCTIONALITY
+-- ===============================
+
+-- 1. Get all programs with department information
+SELECT p.*, d.name as department_name, d.short_name as dept_short_name 
+FROM programs p 
+LEFT JOIN departments d ON p.department_id = d.id 
+WHERE p.is_active = TRUE 
+ORDER BY p.program_type, p.name;
+
+-- 2. Get student admission applications by status
+SELECT a.*, p.name as program_name 
+FROM admissions a 
+LEFT JOIN programs p ON a.program_id = p.id 
+WHERE a.application_status = 'pending' 
+ORDER BY a.applied_at DESC;
+
+-- 3. Get students with their program and fee status
+SELECT s.student_id, s.roll_number, u.first_name, u.last_name, p.name as program_name, s.fee_status, s.status
+FROM students s
+LEFT JOIN users u ON s.user_id = u.id
+LEFT JOIN programs p ON s.program_id = p.id
+WHERE s.status = 'active'
+ORDER BY s.student_id;
+
+-- 4. Get course enrollment statistics
+SELECT c.id, sub.name as subject_name, p.name as program_name, c.enrolled_students, c.max_students,
+       ROUND((c.enrolled_students / c.max_students) * 100, 2) as occupancy_percentage
+FROM courses c
+LEFT JOIN subjects sub ON c.subject_id = sub.id
+LEFT JOIN programs p ON c.program_id = p.id
+WHERE c.status = 'active';
+
+-- 5. Get teacher workload (number of courses)
+SELECT t.teacher_id, u.first_name, u.last_name, d.name as department_name, COUNT(c.id) as total_courses
+FROM teachers t
+LEFT JOIN users u ON t.user_id = u.id
+LEFT JOIN departments d ON t.department_id = d.id
+LEFT JOIN courses c ON t.id = c.teacher_id AND c.status = 'active'
+WHERE t.status = 'active'
+GROUP BY t.id
+ORDER BY total_courses DESC;
+
+-- 6. Get student attendance summary
+SELECT s.student_id, u.first_name, u.last_name, 
+       COUNT(a.id) as total_classes,
+       SUM(CASE WHEN a.status = 'present' THEN 1 ELSE 0 END) as present_count,
+       ROUND((SUM(CASE WHEN a.status = 'present' THEN 1 ELSE 0 END) / COUNT(a.id)) * 100, 2) as attendance_percentage
+FROM students s
+LEFT JOIN users u ON s.user_id = u.id
+LEFT JOIN attendance a ON s.id = a.student_id
+WHERE s.status = 'active'
+GROUP BY s.id
+HAVING total_classes > 0
+ORDER BY attendance_percentage DESC;
+
+-- 7. Get fee collection summary by program
+SELECT p.name as program_name, 
+       COUNT(sf.id) as total_fee_records,
+       SUM(sf.amount_due) as total_due,
+       SUM(sf.amount_paid) as total_collected,
+       SUM(sf.amount_due - sf.amount_paid) as outstanding
+FROM programs p
+LEFT JOIN students s ON p.id = s.program_id
+LEFT JOIN student_fees sf ON s.id = sf.student_id
+GROUP BY p.id
+ORDER BY total_collected DESC;
+
+-- 8. Get upcoming events
+SELECT title, description, event_type, event_date, start_time, venue
+FROM events 
+WHERE event_date >= CURDATE() AND is_published = TRUE
+ORDER BY event_date ASC, start_time ASC
+LIMIT 10;
+
+-- 9. Get latest notices by category
+SELECT title, content, category, published_date, is_urgent
+FROM notices 
+WHERE is_published = TRUE AND (expiry_date IS NULL OR expiry_date >= CURDATE())
+ORDER BY is_urgent DESC, published_date DESC
+LIMIT 20;
+
+-- 10. Get library book availability
+SELECT lb.title, lb.author, lb.isbn, lb.total_copies, lb.available_copies,
+       (lb.total_copies - lb.available_copies) as issued_copies
+FROM library_books lb
+WHERE lb.is_available = TRUE
+ORDER BY lb.title;
+
+-- 11. Dashboard statistics query
+SELECT 
+  (SELECT COUNT(*) FROM students WHERE status = 'active') as total_students,
+  (SELECT COUNT(*) FROM teachers WHERE status = 'active') as total_teachers,
+  (SELECT COUNT(*) FROM programs WHERE is_active = TRUE) as total_programs,
+  (SELECT COUNT(*) FROM admissions WHERE application_status = 'pending') as pending_admissions,
+  (SELECT SUM(amount_paid) FROM student_fees WHERE MONTH(paid_date) = MONTH(CURDATE()) AND YEAR(paid_date) = YEAR(CURDATE())) as monthly_fee_collection;
+
+-- 12. Get timetable for a specific program and semester
+SELECT t.day_of_week, t.time_slot, s.name as subject_name, 
+       CONCAT(u.first_name, ' ', u.last_name) as teacher_name, t.room_number
+FROM timetables t
+LEFT JOIN subjects s ON t.subject_id = s.id
+LEFT JOIN teachers teach ON t.teacher_id = teach.id
+LEFT JOIN users u ON teach.user_id = u.id
+WHERE t.program_id = ? AND t.semester = ? AND t.is_active = TRUE
+ORDER BY 
+  FIELD(t.day_of_week, 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'),
+  t.time_slot;
+
+-- ===============================
+-- INDEXES FOR BETTER PERFORMANCE
+-- ===============================
+
+CREATE INDEX idx_students_program_id ON students(program_id);
+CREATE INDEX idx_students_status ON students(status);
+CREATE INDEX idx_students_fee_status ON students(fee_status);
+CREATE INDEX idx_admissions_status ON admissions(application_status);
+CREATE INDEX idx_admissions_program_id ON admissions(program_id);
+CREATE INDEX idx_attendance_student_course ON attendance(student_id, course_id);
+CREATE INDEX idx_attendance_date ON attendance(attendance_date);
+CREATE INDEX idx_student_fees_status ON student_fees(status);
+CREATE INDEX idx_notices_published ON notices(is_published, published_date);
+CREATE INDEX idx_events_date ON events(event_date);
+CREATE INDEX idx_courses_status ON courses(status);
+CREATE INDEX idx_users_role ON users(role);
+CREATE INDEX idx_users_active ON users(is_active);
+
+-- ===============================
+-- END OF DATABASE SCHEMA
+-- ===============================

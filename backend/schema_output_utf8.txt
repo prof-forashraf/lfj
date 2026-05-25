@@ -1,0 +1,194 @@
+﻿
+-- affiliate_products --
+CREATE TABLE `affiliate_products` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `amazon_asin` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Amazon Standard Identification Number',
+  `product_name_snapshot` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Name of product at time of adding',
+  `amazon_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Direct affiliate link (optional if generated elsewhere)',
+  `image_urls` json DEFAULT NULL,
+  `your_notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT 'Why you recommend it, keywords, etc.',
+  `main_image_url_snapshot` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Snapshot of main image URL (from Amazon)',
+  `try_on_image_url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `item_type` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `is_featured` tinyint(1) DEFAULT NULL,
+  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
+  `category_id` bigint unsigned DEFAULT NULL,
+  `local_image_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `try_on_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'e.g., earring, necklace, ring',
+  `try_on_anchor` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'AI anchor point: e.g., ear_tragion_left, chin_center, ring_finger_mcp',
+  `try_on_scale_default` decimal(5,3) DEFAULT '0.100' COMMENT 'Default scale for the item (0.01 to 1.0)',
+  `try_on_offset_y` int DEFAULT '0' COMMENT 'Vertical pixel offset from anchor',
+  `seo_title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `meta_description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `og_title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `og_description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `schema_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Product',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `affiliate_products_amazon_asin_unique` (`amazon_asin`),
+  KEY `affiliate_products_category_id_foreign` (`category_id`),
+  CONSTRAINT `affiliate_products_category_id_foreign` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+
+-- categories --
+CREATE TABLE `categories` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `image` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `parent_id` bigint unsigned DEFAULT NULL,
+  `seo_title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `meta_description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_featured` tinyint(1) NOT NULL DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `og_title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `og_description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `og_image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `schema_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'CollectionPage',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `categories_slug_unique` (`slug`),
+  KEY `categories_parent_id_foreign` (`parent_id`),
+  CONSTRAINT `categories_parent_id_foreign` FOREIGN KEY (`parent_id`) REFERENCES `categories` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+
+-- posts --
+CREATE TABLE `posts` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint unsigned NOT NULL,
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `excerpt` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `featured_image_url_snapshot` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `image_urls` json DEFAULT NULL,
+  `featured_image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'draft',
+  `is_featured` tinyint(1) NOT NULL DEFAULT '0',
+  `published_at` timestamp NULL DEFAULT NULL,
+  `seo_title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `meta_description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `meta_keywords` json DEFAULT NULL,
+  `canonical_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `noindex` tinyint(1) NOT NULL DEFAULT '0',
+  `nofollow` tinyint(1) NOT NULL DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `og_title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `og_description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `og_image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `twitter_title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `twitter_description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `schema_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Article',
+  `focus_keyword` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `reading_time` tinyint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `posts_slug_unique` (`slug`),
+  KEY `posts_user_id_foreign` (`user_id`),
+  KEY `posts_user_id_index` (`user_id`),
+  KEY `posts_created_at_index` (`created_at`),
+  KEY `posts_status_published_at_index` (`status`,`published_at`),
+  CONSTRAINT `posts_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=99 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+
+-- users --
+CREATE TABLE `users` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email_verified_at` timestamp NULL DEFAULT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `users_email_unique` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+
+-- diamond_pricings --
+CREATE TABLE `diamond_pricings` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `carat_range_min` decimal(3,2) NOT NULL,
+  `carat_range_max` decimal(3,2) NOT NULL,
+  `cut_grade` enum('Excellent','Very Good','Good','Fair','Poor') NOT NULL,
+  `color_grade` enum('D','E','F','G','H','I','J','K','L','M','N') NOT NULL,
+  `clarity_grade` enum('FL','IF','VVS1','VVS2','VS1','VS2','SI1','SI2','I1','I2','I3') NOT NULL,
+  `base_price_per_carat` decimal(10,2) NOT NULL,
+  `price_multiplier` decimal(4,3) DEFAULT '1.000',
+  `shape` varchar(20) DEFAULT 'Round',
+  `fluorescence` enum('None','Faint','Medium','Strong') DEFAULT 'None',
+  `certification` varchar(10) DEFAULT 'GIA',
+  `date_updated` date NOT NULL,
+  `market_region` varchar(10) DEFAULT 'Global',
+  `is_active` tinyint(1) DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_carat_cut_color_clarity` (`carat_range_min`,`carat_range_max`,`cut_grade`,`color_grade`,`clarity_grade`),
+  KEY `idx_date_updated` (`date_updated`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+-- tags --
+CREATE TABLE `tags` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `seo_title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `meta_description` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `tags_slug_unique` (`slug`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+
+-- category_post --
+CREATE TABLE `category_post` (
+  `category_id` bigint unsigned NOT NULL,
+  `post_id` bigint unsigned NOT NULL,
+  PRIMARY KEY (`category_id`,`post_id`),
+  KEY `category_post_post_id_foreign` (`post_id`),
+  CONSTRAINT `category_post_category_id_foreign` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `category_post_post_id_foreign` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+
+-- affiliate_product_post --
+CREATE TABLE `affiliate_product_post` (
+  `affiliate_product_id` bigint unsigned NOT NULL,
+  `post_id` bigint unsigned NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`affiliate_product_id`,`post_id`),
+  KEY `affiliate_product_post_post_id_foreign` (`post_id`),
+  CONSTRAINT `affiliate_product_post_affiliate_product_id_foreign` FOREIGN KEY (`affiliate_product_id`) REFERENCES `affiliate_products` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `affiliate_product_post_post_id_foreign` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+
+-- settings --
+CREATE TABLE `settings` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` longtext COLLATE utf8mb4_unicode_ci,
+  `group` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'general',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+
+-- audit_logs --
+CREATE TABLE `audit_logs` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint unsigned DEFAULT NULL,
+  `action` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `model_type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `model_id` bigint unsigned DEFAULT NULL,
+  `old_values` text COLLATE utf8mb4_unicode_ci,
+  `new_values` text COLLATE utf8mb4_unicode_ci,
+  `ip_address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_agent` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `audit_logs_user_id_created_at_index` (`user_id`,`created_at`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci

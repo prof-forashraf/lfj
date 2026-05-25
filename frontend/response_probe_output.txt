@@ -1,0 +1,8 @@
+﻿{
+  "csrfStatus": 204,
+  "loginStatus": 419,
+  "loginHeaders": {
+    "content-type": "text/html; charset=utf-8"
+  },
+  "loginBody": null
+}

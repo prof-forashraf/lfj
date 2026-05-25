@@ -1,0 +1,17 @@
+HTTP/1.1 204 No Content
+Host: 127.0.0.1:8000
+Connection: close
+X-Powered-By: PHP/8.3.28
+Cache-Control: no-cache, private
+Date: Tue, 12 May 2026 14:11:05 GMT
+X-Response-Time: 23.44ms
+X-Memory-Usage: 0.48MB
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+Referrer-Policy: strict-origin-when-cross-origin
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://*.amazonaws.com https://*.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.amazon.com; frame-ancestors 'none';
+Set-Cookie: XSRF-TOKEN=eyJpdiI6ImRFUGN5UTQ0QW9ETkVZSzVZOGJEcEE9PSIsInZhbHVlIjoiS2pCZEI4ZllDSC9oNkxoNG43dnd0U3d0N2Z3clhidU8zTFV3MHZEU2FmV0pBVG02QUd1WUZkZDFrK2FpR00vbHFWOUU5b0xVc0dPa1RvZUtCMGNyNnpRSWZvcTY5bG1SWGV4OUJ4SHJTbnlENEU5aGF4L2I4aUVKY3B3cFVhenkiLCJtYWMiOiIyMTQ5NjY4MzEyZWZkMDQzY2Q5Yjg3Yjg4OTUyODIyY2M2ZWY2Y2M3OGM0ZThkNzM2OWVjMmJmMDVkOGU0ZGQ4IiwidGFnIjoiIn0%3D; expires=Tue, 12 May 2026 16:11:05 GMT; Max-Age=7200; path=/; samesite=none
+Set-Cookie: latest_fashion_jewellery_session=eyJpdiI6IlduclhIaDdOZjhub1dwS2REbnVvZGc9PSIsInZhbHVlIjoiSzlaZFVoZjBmdEQ5dWI1UEowc2hQYy9jNkhPQXJ4T2lrMm1wcUt5blk2VldBV3owb0R3VGdIS0tWN3pjODk4cUpQbUlRWHlBVWUxd1V0NkF2SlFUbXJQbStwcXdyV1RjQmJ6VXpqcnFJa3B1THlCRDE2cElvczV0QWNnY2RwcWIiLCJtYWMiOiIyNTkyNWFkMGM1ZDJhOWI5OTZjYTJlNWY5MGIyOGNjNDU2M2Y0YThiMTE4M2M1OGE5NDYwYTI1NWIyMWE1Mzc2IiwidGFnIjoiIn0%3D; expires=Tue, 12 May 2026 16:11:05 GMT; Max-Age=7200; path=/; httponly; samesite=none
+

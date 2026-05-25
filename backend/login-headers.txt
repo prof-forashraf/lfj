@@ -1,0 +1,21 @@
+HTTP/1.1 302 Found
+Host: 127.0.0.1:8000
+Connection: close
+X-Powered-By: PHP/8.3.28
+Cache-Control: no-cache, private
+Date: Tue, 12 May 2026 14:12:01 GMT
+Location: http://127.0.0.1:8000/sanctum/csrf-cookie
+Content-Type: text/html; charset=utf-8
+X-RateLimit-Limit: 5
+X-RateLimit-Remaining: 4
+X-Response-Time: 38.65ms
+X-Memory-Usage: 0.76MB
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+Referrer-Policy: strict-origin-when-cross-origin
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://*.amazonaws.com https://*.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.amazon.com; frame-ancestors 'none';
+Set-Cookie: XSRF-TOKEN=eyJpdiI6IkhBMjB6RmlzMFdaV0hPRGpFdXhwMUE9PSIsInZhbHVlIjoiTkt4Q0t2M0thL3hVN1RHMW1kampiOEtFT09BeUpGZXd5Um0vMk9wTmorQ3NCQ25BMHRNTGhrUWZWZ0lia3VPYW9XVE5JODYwVG1WcUxsd2FIZldRd2NhUzh6TVdJdkpGbWN5UHJWZlhjYTk1S1c0aEpxTmd1YjdoWk5rMXZBL2wiLCJtYWMiOiJjYWJhNDI5Y2Y4NGMxZDM0MGNiY2M5ODYxMzBmN2VmMDg3MjI0NTk4NDlhN2M5MDQ4YjM3OTk0OGExODZkYWI0IiwidGFnIjoiIn0%3D; expires=Tue, 12 May 2026 16:12:01 GMT; Max-Age=7198; path=/; samesite=lax
+Set-Cookie: latest_fashion_jewellery_session=eyJpdiI6IjdMT0JwenZ5SGYxaDNXSkM5MitHQkE9PSIsInZhbHVlIjoiRS8wODBDVW4wRnZ5b1hPYjViYXcxVWE2VHovUHI0bEtEY0FaSVk0R3hOZUVTcnpyV25TZEJUbWcwTFBCVFlkLzFmSm1seTZ4SENWZzd5dUJ0d3h6RlVMN2Zsb1lRQnhXU3dVMU8wN25iSGxhUGVSWFFjK2hjS0FIcFA4UGlSRmwiLCJtYWMiOiIxMDRhOThiNmY5YTlhYzM5YmQzNDdhMmI3M2RlOTJiZjcyYWVmZmFjNmZkOTZmMmYwZjBjMGJlNzdkZmE5YTc4IiwidGFnIjoiIn0%3D; expires=Tue, 12 May 2026 16:12:01 GMT; Max-Age=7198; path=/; httponly; samesite=lax
+

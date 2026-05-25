@@ -1,0 +1,47 @@
+﻿{
+  "loginUrl": "http://127.0.0.1:8000/login",
+  "urlAfterWait": "http://127.0.0.1:8000/login",
+  "email": "",
+  "password": "",
+  "formAction": {
+    "action": null,
+    "method": null,
+    "autocomplete": null
+  },
+  "inputs": [
+    {
+      "name": "email",
+      "type": "email",
+      "value": "",
+      "autocomplete": "",
+      "defaultValue": ""
+    },
+    {
+      "name": "password",
+      "type": "password",
+      "value": "",
+      "autocomplete": "",
+      "defaultValue": ""
+    },
+    {
+      "name": "",
+      "type": "checkbox",
+      "value": "on",
+      "autocomplete": "",
+      "defaultValue": "on"
+    }
+  ],
+  "network": [
+    {
+      "url": "http://127.0.0.1:8000/api/user",
+      "method": "GET",
+      "type": "xhr"
+    },
+    {
+      "url": "http://127.0.0.1:8000/api/user",
+      "status": 204,
+      "type": "xhr"
+    }
+  ],
+  "submitLogs": []
+}

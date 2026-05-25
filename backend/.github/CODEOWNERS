@@ -1,0 +1,55 @@
+# CODEOWNERS — Pricing domain and related CI protections
+# This file assigns owners (teams or users) who must review changes touching
+# the sensitive pricing domain, CI, and admin surfaces.
+#
+# IMPORTANT NOTES:
+# - Pricing logic is financially sensitive and authoritative.
+# - The pricing domain is the single source of truth; frontend must not implement
+#   independent pricing calculations.
+# - Pricing changes must remain deterministic, centrally governed, domain-driven,
+#   and audit-safe. Any change to pricing logic requires review before merge.
+#
+# Replace the placeholder teams below with your real GitHub teams or usernames.
+# These values are set to sensible repo-scoped team handles — replace if your
+# organization uses different team names or user handles.
+
+# -------------------------
+# Pricing Domain (require review)
+# -------------------------
+/app/Domain/Pricing/      @lfjproj/pricing
+/app/Http/Controllers/Api/PricingController.php  @lfjproj/pricing
+/app/Models/DailyMetalPrice.php   @lfjproj/pricing
+/app/Models/GoldPrice.php         @lfjproj/pricing
+/app/Models/JewelryMaterial.php   @lfjproj/pricing
+/app/Jobs/SyncGoldApiPricesJob.php @lfjproj/pricing
+/app/Services/GoldApiService.php  @lfjproj/pricing
+
+# -------------------------
+# CI & Static Analysis (require review)
+# -------------------------
+/.github/workflows/    @lfjproj/devops
+/phpstan.neon          @lfjproj/devops
+
+# -------------------------
+# Filament Pricing Admin (require review)
+# -------------------------
+/app/Filament/Resources/JewelryMaterialResource.php  @lfjproj/filament-admin
+/app/Filament/Pages/MetalPriceManagement.php         @lfjproj/filament-admin
+
+# -------------------------
+# Future-ready team placeholders (expand as the domain grows)
+# Keep these as high-level categories for future expansion.
+# -------------------------
+/pricing/     @lfjproj/pricing
+/billing/     @lfjproj/billing
+/invoicing/   @lfjproj/invoicing
+/checkout/    @lfjproj/checkout
+/accounting/  @lfjproj/accounting
+
+# -------------------------
+# Governance reminder (human-readable):
+# - Who can change formulas (owners listed above)
+# - How changes are reviewed: reviews required, approvals by pricing-team
+# - Pricing versions, effective dates, and audit snapshots should be used
+#   to maintain reproducibility of historical quotes and invoices.
+# -------------------------

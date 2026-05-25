@@ -1,0 +1,29 @@
+name: "Pricing PR Validation"
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+jobs:
+  validate-pr:
+    name: Validate PR body for pricing governance
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR body contains required sections
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const body = context.payload.pull_request && context.payload.pull_request.body || '';
+            const required = [
+              'Pricing Impact Assessment',
+              'Architectural Compliance Checklist',
+              'Testing Checklist',
+              'CHANGELOG_PRICING.md',
+              'Risk Assessment'
+            ];
+            const missing = required.filter(r => !body.includes(r));
+            if (missing.length) {
+              core.setFailed(`PR body is missing required sections: ${missing.join(', ')}. Please use .github/pull_request_template.md and complete the required fields.`);
+            } else {
+              core.info('PR body contains required pricing governance sections.');
+            }
