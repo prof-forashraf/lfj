@@ -37,7 +37,8 @@ class ResalePricingService implements ResalePricingServiceInterface
 
         $buybackAmount = $this->resaleCalculator->calculateBuyback($estimatedMarketValue, $input->buybackPercentage, $deductionPercent);
 
-        return new ResaleDTO(
+        // Explicitly return ResaleDTO (the child class), not parent
+        $dto = new ResaleDTO(
             originalPrice: new Money($estimatedMarketValue->amount(), $input->currency),
             estimatedMarketValue: $estimatedMarketValue,
             buybackAmount: $buybackAmount,
@@ -45,6 +46,11 @@ class ResalePricingService implements ResalePricingServiceInterface
             condition: $input->condition,
             deductions: $deductions,
         );
+
+        // Type assertion to ensure PHP knows this is ResaleDTO
+        assert($dto instanceof ResaleDTO, 'Service must return ResaleDTO instance');
+        
+        return $dto;
     }
 
     private function convertToGram(MetalPriceDTO $marketPrice): Money

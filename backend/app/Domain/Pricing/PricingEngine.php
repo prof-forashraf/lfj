@@ -131,6 +131,7 @@ final class PricingEngine
         $input = $payload['input'];
         $marketPrice = $payload['marketPrice'];
         $result = $this->resalePricingService->calculate($input, $marketPrice);
+        
 
         $payload['debugSteps'] = array_merge($payload['debugSteps'], [
             ['step' => 'resale_calculation', 'estimated_market_value' => $result->estimatedMarketValue->amount()],
@@ -139,15 +140,7 @@ final class PricingEngine
         ]);
 
         // ResalePricingService already returns ResaleDTO, use it directly
-      $payload['output'] = new ResaleDTO(
-    originalPrice: $result->originalPrice,
-    estimatedMarketValue: $result->estimatedMarketValue,
-    buybackAmount: $result->buybackAmount,
-    buybackPercentage: $result->buybackPercentage,
-    condition: $result->condition,
-    deductions: $result->deductions,
-);
-
+      $payload['output'] = $result;
         return $payload;
     }
 
@@ -165,13 +158,7 @@ final class PricingEngine
         ]);
 
         // ZakatPricingService already returns ZakatDTO, use it directly
-       $payload['output'] = new ZakatDTO(
-    holdingWeight: $result->holdingWeight,
-    nisabThreshold: $result->nisabThreshold,
-    totalValue: $result->totalValue,
-    isLiableForZakat: $result->isLiableForZakat,
-    zakatDue: $result->zakatDue,
-);
+        $payload['output'] = $result;
 
         return $payload;
     }

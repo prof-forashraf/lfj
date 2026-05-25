@@ -30,12 +30,18 @@ class ZakatPricingService implements ZakatPricingServiceInterface
         $isLiable = $this->zakatCalculator->isLiable($totalValue, $nisabThreshold);
         $zakatDue = $isLiable ? $this->zakatCalculator->calculateZakat($totalValue) : new Money(0.0, $input->currency);
 
-        return new ZakatDTO(
+        // Explicitly return ZakatDTO (the child class), not parent
+        $dto = new ZakatDTO(
             holdingWeight: $input->weight,
             nisabThreshold: $nisabThreshold,
             totalValue: $totalValue,
             isLiableForZakat: $isLiable,
             zakatDue: $zakatDue,
         );
+
+        // Type assertion to ensure PHP knows this is ZakatDTO
+        assert($dto instanceof ZakatDTO, 'Service must return ZakatDTO instance');
+        
+        return $dto;
     }
 }
