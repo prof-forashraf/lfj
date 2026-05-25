@@ -138,7 +138,13 @@ final class PricingEngine
             ['step' => 'deductions', 'deductions' => $result->deductions],
         ]);
 
-        $payload['output'] = $result;
+        // Fix: Convert the intermediate ResaleCalculationDTO to the expected public ResaleDTO 
+        // If your ResaleDTO has a specific constructor format, adjust these keys to match it.
+        $payload['output'] = new ResaleDTO(
+            estimatedMarketValue: $result->estimatedMarketValue,
+            buybackAmount: $result->buybackAmount,
+            deductions: $result->deductions
+        );
 
         return $payload;
     }
@@ -156,7 +162,13 @@ final class PricingEngine
             ['step' => 'zakat_due', 'zakat_due' => $result->zakatDue->amount()],
         ]);
 
-        $payload['output'] = $result;
+        // Fix: Convert the intermediate ZakatCalculationDTO to the expected public ZakatDTO
+        // If your ZakatDTO has a specific constructor format, adjust these keys to match it.
+        $payload['output'] = new ZakatDTO(
+            nisabThreshold: $result->nisabThreshold,
+            totalValue: $result->totalValue,
+            zakatDue: $result->zakatDue
+        );
 
         return $payload;
     }
