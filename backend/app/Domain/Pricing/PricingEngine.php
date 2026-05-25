@@ -139,7 +139,14 @@ final class PricingEngine
         ]);
 
         // ResalePricingService already returns ResaleDTO, use it directly
-        $payload['output'] = $result;
+      $payload['output'] = new ResaleDTO(
+    originalPrice: $result->originalPrice,
+    estimatedMarketValue: $result->estimatedMarketValue,
+    buybackAmount: $result->buybackAmount,
+    buybackPercentage: $result->buybackPercentage,
+    condition: $result->condition,
+    deductions: $result->deductions,
+);
 
         return $payload;
     }
@@ -158,7 +165,13 @@ final class PricingEngine
         ]);
 
         // ZakatPricingService already returns ZakatDTO, use it directly
-        $payload['output'] = $result;
+       $payload['output'] = new ZakatDTO(
+    holdingWeight: $result->holdingWeight,
+    nisabThreshold: $result->nisabThreshold,
+    totalValue: $result->totalValue,
+    isLiableForZakat: $result->isLiableForZakat,
+    zakatDue: $result->zakatDue,
+);
 
         return $payload;
     }
