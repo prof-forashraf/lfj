@@ -63,6 +63,15 @@ jobs:
           sed -i 's/^CACHE_DRIVER=.*/CACHE_DRIVER=redis/' .env
           sed -i 's/^REDIS_HOST=.*/REDIS_HOST=127.0.0.1/' .env
 
+      - name: Wait for MySQL to be ready
+        run: |
+          cd backend
+          echo "Waiting for MySQL on 127.0.0.1:3306..."
+          for i in {1..30}; do
+            php -r "try { new PDO('mysql:host=127.0.0.1;port=3306', 'root', 'root'); exit(0);} catch (Exception \$e) { exit(1); }" && echo "MySQL is accepting connections" && break
+            echo "Waiting for MySQL... ($i)"; sleep 2
+          done
+
       - name: Run Database Migrations
         working-directory: backend
         run: php artisan migrate --force --quiet
