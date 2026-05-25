@@ -125,7 +125,7 @@ final class PricingEngine
         return $payload;
     }
 
- private function calculateResaleValue(array $payload): array
+    private function calculateResaleValue(array $payload): array
     {
         /** @var ResalePricingInputDTO $input */
         $input = $payload['input'];
@@ -138,11 +138,14 @@ final class PricingEngine
             ['step' => 'deductions', 'deductions' => $result->deductions],
         ]);
 
-        // Fix: Check if a structural conversion method exists; if not, pass the result through directly
-        if (method_exists($result, 'toPublicDto')) {
-            $payload['output'] = $result->toPublicDto();
+        // Fix: Fallback conversion matrix. Checks if DTO expects a wrapper or explicit initialization array.
+        if (method_exists(ResaleDTO::class, 'fromCalculation')) {
+            $payload['output'] = ResaleDTO::fromCalculation($result);
+        } elseif (method_exists(ResaleDTO::class, 'fromArray')) {
+            $payload['output'] = ResaleDTO::fromArray((array) $result);
         } else {
-            $payload['output'] = $result; 
+            // Direct wrapper adaptation instance mapping
+            $payload['output'] = new ResaleDTO($result->estimatedMarketValue, $result->buybackAmount, $result->deductions);
         }
 
         return $payload;
@@ -161,11 +164,14 @@ final class PricingEngine
             ['step' => 'zakat_due', 'zakat_due' => $result->zakatDue->amount()],
         ]);
 
-        // Fix: Check if a structural conversion method exists; if not, pass the result through directly
-        if (method_exists($result, 'toPublicDto')) {
-            $payload['output'] = $result->toPublicDto();
+        // Fix: Fallback conversion matrix. Checks if DTO expects a wrapper or explicit initialization array.
+        if (method_exists(ZakatDTO::class, 'fromCalculation')) {
+            $payload['output'] = ZakatDTO::fromCalculation($result);
+        } elseif (method_exists(ZakatDTO::class, 'fromArray')) {
+            $payload['output'] = ZakatDTO::fromArray((array) $result);
         } else {
-            $payload['output'] = $result;
+            // Direct wrapper adaptation instance mapping
+            $payload['output'] = new ZakatDTO($result->nisabThreshold, $result->totalValue, $result->zakatDue);
         }
 
         return $payload;
