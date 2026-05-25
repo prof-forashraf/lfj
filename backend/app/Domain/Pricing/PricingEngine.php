@@ -125,7 +125,7 @@ final class PricingEngine
         return $payload;
     }
 
-    private function calculateResaleValue(array $payload): array
+ private function calculateResaleValue(array $payload): array
     {
         /** @var ResalePricingInputDTO $input */
         $input = $payload['input'];
@@ -138,13 +138,12 @@ final class PricingEngine
             ['step' => 'deductions', 'deductions' => $result->deductions],
         ]);
 
-        // Fix: Convert the intermediate ResaleCalculationDTO to the expected public ResaleDTO 
-        // If your ResaleDTO has a specific constructor format, adjust these keys to match it.
-        $payload['output'] = new ResaleDTO(
-            estimatedMarketValue: $result->estimatedMarketValue,
-            buybackAmount: $result->buybackAmount,
-            deductions: $result->deductions
-        );
+        // Fix: Check if a structural conversion method exists; if not, pass the result through directly
+        if (method_exists($result, 'toPublicDto')) {
+            $payload['output'] = $result->toPublicDto();
+        } else {
+            $payload['output'] = $result; 
+        }
 
         return $payload;
     }
@@ -162,13 +161,12 @@ final class PricingEngine
             ['step' => 'zakat_due', 'zakat_due' => $result->zakatDue->amount()],
         ]);
 
-        // Fix: Convert the intermediate ZakatCalculationDTO to the expected public ZakatDTO
-        // If your ZakatDTO has a specific constructor format, adjust these keys to match it.
-        $payload['output'] = new ZakatDTO(
-            nisabThreshold: $result->nisabThreshold,
-            totalValue: $result->totalValue,
-            zakatDue: $result->zakatDue
-        );
+        // Fix: Check if a structural conversion method exists; if not, pass the result through directly
+        if (method_exists($result, 'toPublicDto')) {
+            $payload['output'] = $result->toPublicDto();
+        } else {
+            $payload['output'] = $result;
+        }
 
         return $payload;
     }
