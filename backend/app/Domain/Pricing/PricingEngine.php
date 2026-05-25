@@ -138,20 +138,8 @@ final class PricingEngine
             ['step' => 'deductions', 'deductions' => $result->deductions],
         ]);
 
-        if (method_exists(ResaleDTO::class, 'fromCalculation')) {
-            $payload['output'] = ResaleDTO::fromCalculation($result);
-        } elseif (method_exists(ResaleDTO::class, 'fromArray')) {
-            $payload['output'] = ResaleDTO::fromArray((array) $result);
-        } else {
-            // FIX: Pass the correct condition string argument instead of deductions array
-            $payload['output'] = new ResaleDTO(
-                $result->originalPrice,
-                $result->estimatedMarketValue,
-                $result->buybackAmount,
-                $result->buybackPercentage,
-                $result->condition
-            );
-        }
+        // ResalePricingService already returns ResaleDTO, use it directly
+        $payload['output'] = $result;
 
         return $payload;
     }
@@ -169,20 +157,8 @@ final class PricingEngine
             ['step' => 'zakat_due', 'zakat_due' => $result->zakatDue->amount()],
         ]);
 
-        if (method_exists(ZakatDTO::class, 'fromCalculation')) {
-            $payload['output'] = ZakatDTO::fromCalculation($result);
-        } elseif (method_exists(ZakatDTO::class, 'fromArray')) {
-            $payload['output'] = ZakatDTO::fromArray((array) $result);
-        } else {
-            // FIX: Create ZakatDTO instance with correct constructor arguments
-            $payload['output'] = new ZakatDTO(
-                $result->holdingWeight,
-                $result->nisabThreshold,
-                $result->totalValue,
-                $result->isLiableForZakat,
-                $result->zakatDue
-            );
-        }
+        // ZakatPricingService already returns ZakatDTO, use it directly
+        $payload['output'] = $result;
 
         return $payload;
     }
