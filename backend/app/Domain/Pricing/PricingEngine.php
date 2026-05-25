@@ -125,7 +125,7 @@ final class PricingEngine
         return $payload;
     }
 
-    private function calculateResaleValue(array $payload): array
+  private function calculateResaleValue(array $payload): array
     {
         /** @var ResalePricingInputDTO $input */
         $input = $payload['input'];
@@ -138,14 +138,19 @@ final class PricingEngine
             ['step' => 'deductions', 'deductions' => $result->deductions],
         ]);
 
-        // Fix: Fallback conversion matrix. Checks if DTO expects a wrapper or explicit initialization array.
         if (method_exists(ResaleDTO::class, 'fromCalculation')) {
             $payload['output'] = ResaleDTO::fromCalculation($result);
         } elseif (method_exists(ResaleDTO::class, 'fromArray')) {
             $payload['output'] = ResaleDTO::fromArray((array) $result);
         } else {
-            // Direct wrapper adaptation instance mapping
-            $payload['output'] = new ResaleDTO($result->estimatedMarketValue, $result->buybackAmount, $result->deductions);
+            // FIX: Match the exact positional arguments of the DTO constructor
+            $payload['output'] = new ResaleDTO(
+                $result->originalPrice,
+                $result->estimatedMarketValue,
+                $result->buybackAmount,
+                $result->buybackPercentage,
+                $result->deductions
+            );
         }
 
         return $payload;
@@ -164,19 +169,23 @@ final class PricingEngine
             ['step' => 'zakat_due', 'zakat_due' => $result->zakatDue->amount()],
         ]);
 
-        // Fix: Fallback conversion matrix. Checks if DTO expects a wrapper or explicit initialization array.
         if (method_exists(ZakatDTO::class, 'fromCalculation')) {
             $payload['output'] = ZakatDTO::fromCalculation($result);
         } elseif (method_exists(ZakatDTO::class, 'fromArray')) {
             $payload['output'] = ZakatDTO::fromArray((array) $result);
         } else {
-            // Direct wrapper adaptation instance mapping
-            $payload['output'] = new ZakatDTO($result->nisabThreshold, $result->totalValue, $result->zakatDue);
+            // FIX: Match the exact positional arguments of the DTO constructor
+            $payload['output'] = new ZakatDTO(
+                $result->holdingWeight,
+                $result->nisabThreshold,
+                $result->totalValue,
+                $result->isLiableForZakat,
+                $result->zakatDue
+            );
         }
 
         return $payload;
     }
-
     private function attachDebugSteps(array $payload): array
     {
         if (! $payload['input']->debug) {
