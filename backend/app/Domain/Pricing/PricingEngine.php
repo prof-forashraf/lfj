@@ -125,7 +125,7 @@ final class PricingEngine
         return $payload;
     }
 
-  private function calculateResaleValue(array $payload): array
+    private function calculateResaleValue(array $payload): array
     {
         /** @var ResalePricingInputDTO $input */
         $input = $payload['input'];
@@ -143,13 +143,13 @@ final class PricingEngine
         } elseif (method_exists(ResaleDTO::class, 'fromArray')) {
             $payload['output'] = ResaleDTO::fromArray((array) $result);
         } else {
-            // FIX: Match the exact positional arguments of the DTO constructor
+            // FIX: Pass the correct condition string argument instead of deductions array
             $payload['output'] = new ResaleDTO(
                 $result->originalPrice,
                 $result->estimatedMarketValue,
                 $result->buybackAmount,
                 $result->buybackPercentage,
-                $result->deductions
+                $result->condition
             );
         }
 
@@ -174,7 +174,7 @@ final class PricingEngine
         } elseif (method_exists(ZakatDTO::class, 'fromArray')) {
             $payload['output'] = ZakatDTO::fromArray((array) $result);
         } else {
-            // FIX: Match the exact positional arguments of the DTO constructor
+            // FIX: Create ZakatDTO instance with correct constructor arguments
             $payload['output'] = new ZakatDTO(
                 $result->holdingWeight,
                 $result->nisabThreshold,
@@ -186,6 +186,7 @@ final class PricingEngine
 
         return $payload;
     }
+
     private function attachDebugSteps(array $payload): array
     {
         if (! $payload['input']->debug) {
