@@ -1,0 +1,101 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: lfj_db
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v4
+        with:
+          php-version: '8.2'
+          coverage: none
+
+      - name: Setup Composer Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install Composer Dependencies
+        run: composer install --no-progress --no-suggest --prefer-dist
+
+      - name: Prepare env
+        run: |
+          cp backend/.env.example backend/.env || true
+          php -r '$env = file_get_contents("backend/.env"); $env = preg_replace("/^DB_DATABASE=.*/m", "DB_DATABASE=lfj_db", $env); $env = preg_replace("/^DB_USERNAME=.*/m", "DB_USERNAME=root", $env); $env = preg_replace("/^DB_PASSWORD=.*/m", "DB_PASSWORD=root", $env); file_put_contents("backend/.env", $env);'
+
+      - name: Run PHP tests
+        working-directory: backend
+        run: php artisan test --parallel --stop-on-failure
+
+      - name: Run backend smoke tests
+        working-directory: backend
+        run: composer smoke
+
+      - name: Run database migrations
+        working-directory: backend
+        run: php artisan migrate --force
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Build frontend
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run build
+
+      - name: Run frontend smoke tests
+        working-directory: frontend
+        run: npm run smoke
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push backend image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/lfjproj-backend:latest
+            ghcr.io/${{ github.repository_owner }}/lfjproj-backend:${{ github.sha }}
+
+      - name: Build and push frontend image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/lfjproj-frontend:latest
+            ghcr.io/${{ github.repository_owner }}/lfjproj-frontend:${{ github.sha }}
