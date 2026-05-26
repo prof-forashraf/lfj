@@ -90,7 +90,7 @@ jobs:
 
       - name: Run Unit Tests
         working-directory: backend
-        run: php artisan test --parallel=4
+        run: DB_CONNECTION=sqlite DB_DATABASE=":memory:" CACHE_STORE=array QUEUE_CONNECTION=sync SESSION_DRIVER=array php artisan test --env=testing --parallel
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
