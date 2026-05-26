@@ -36,10 +36,11 @@ class MaterialPriceControllerTest extends TestCase
         Cache::flush();
 
         // Insert a daily_metal_prices record (price_per_unit is per ounce)
-        DB::table('daily_metal_prices')->insert([
+        DB::table('daily_metal_prices')->updateOrInsert([
             'price_date' => now()->toDateString(),
             'base_currency' => 'USD',
             'metal_symbol' => 'XAU',
+        ], [
             'price_per_unit' => 1800.0,
             'unit' => 'ounce',
             'created_at' => now(),
@@ -60,6 +61,18 @@ class MaterialPriceControllerTest extends TestCase
     public function test_returns_404_when_no_data()
     {
         Cache::flush();
+
+        // Ensure any seeded price records for the current date/currency/metal are removed
+        DB::table('daily_metal_prices')
+            ->where('price_date', now()->toDateString())
+            ->where('base_currency', 'USD')
+            ->where('metal_symbol', 'XAU')
+            ->delete();
+
+        // also ensure any gold_prices entries for the currency are removed
+        DB::table('gold_prices')
+            ->where('currency_code', 'USD')
+            ->delete();
 
         $response = $this->getJson('/api/tools/gold-price/USD');
 

@@ -3,6 +3,25 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { VitePWA } from 'vite-plugin-pwa';
 
+// Simple build-time plugin to polyfill Web Crypto in Node build environments
+function polyfillCrypto() {
+  return {
+    name: 'polyfill-crypto',
+    buildStart() {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const nodeCrypto = require('crypto');
+        if (nodeCrypto && nodeCrypto.webcrypto && typeof globalThis.crypto === 'undefined') {
+          // @ts-ignore
+          globalThis.crypto = nodeCrypto.webcrypto;
+        }
+      } catch (e) {
+        // ignore if crypto isn't available
+      }
+    }
+  };
+}
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   base: '/',
@@ -46,6 +65,7 @@ export default defineConfig(({ mode }) => ({
     },
   },
   plugins: [
+    polyfillCrypto(),
     react(),
     VitePWA({
       registerType: 'autoUpdate',
