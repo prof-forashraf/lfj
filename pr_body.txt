@@ -1,0 +1,19 @@
+Summary:
+- Make tests hermetic against seeded daily metal prices by using updateOrInsert and explicit deletions.
+- Fix Profile test email collision by using a randomized lowercase email.
+- Add a small Vite build plugin to polyfill globalThis.crypto during build.
+
+Files changed:
+- backend/tests/Feature/MaterialPriceControllerTest.php
+- backend/tests/Feature/MaterialPriceControllerSilverTest.php
+- backend/tests/Feature/ProfileTest.php
+- backend/tests/Unit/Repositories/MetalPriceRepositoryTest.php
+- frontend/vite.config.ts
+
+Verification:
+- Backend: php artisan test (all tests passed)
+- Frontend: npm ci && npm run build (build succeeded)
+
+Notes:
+- npm ci reported vulnerabilities; consider npm audit fixes.
+- The Vite crypto polyfill is a minimal build-time fix; consider a maintained polyfill or ensuring CI Node has webcrypto.
