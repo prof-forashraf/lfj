@@ -22,7 +22,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && node ./scripts/build-with-crypto.js",
     "build:dev": "tsc && vite build --mode development",
     "build:analyze": "tsc && vite build --mode analyze",
     "preview": "vite preview",
