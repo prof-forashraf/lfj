@@ -16,7 +16,7 @@ test('profile page is displayed', function () {
 test('profile information can be updated', function () {
     $user = User::factory()->create();
 
-    $email = 'test+' . Str::random(8) . '@example.com';
+    $email = strtolower('test+' . Str::random(8) . '@example.com');
 
     $response = $this
         ->actingAs($user)
