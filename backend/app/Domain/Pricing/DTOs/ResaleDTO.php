@@ -2,4 +2,8 @@
 
 namespace App\Domain\Pricing\DTOs;
 
-class ResaleDTO extends ResaleCalculationDTO {}
+final class ResaleDTO extends ResaleCalculationDTO
+{
+    // Force strict type checking by being a final class
+    // This ensures isinstance checks work correctly
+}

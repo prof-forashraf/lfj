@@ -1,0 +1,74 @@
+name: Build, Deploy & Verify
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+jobs:
+  build-deploy-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install frontend deps
+        working-directory: frontend
+        run: |
+          npm ci
+
+      - name: Build frontend
+        working-directory: frontend
+        run: |
+          npm run build
+
+      - name: Merge frontend dist into backend/public (safe)
+        run: |
+          node scripts/safe_copy_dist_and_report.js --apply
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v3
+        with:
+          php-version: '8.3'
+          extensions: mbstring, pdo, xml
+          coverage: none
+
+      - name: Install composer deps (backend)
+        working-directory: backend
+        run: |
+          composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Publish Filament assets
+        working-directory: backend
+        run: |
+          php artisan filament:assets --no-interaction || true
+          php artisan optimize:clear || true
+
+      - name: Start PHP built-in server
+        working-directory: backend
+        run: |
+          php -S 127.0.0.1:8000 -t public > /tmp/php-server.log 2>&1 &
+          sleep 2
+
+      - name: Install Playwright browsers
+        working-directory: frontend
+        run: |
+          npm ci
+          npx playwright install --with-deps
+
+      - name: Run admin assets check
+        working-directory: frontend
+        run: |
+          npm run check:admin-assets
+
+      - name: Upload logs (if any)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: php-server-log
+          path: /tmp/php-server.log

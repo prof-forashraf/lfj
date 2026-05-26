@@ -52,11 +52,25 @@ return new class extends Migration
             }
         });
 
-        Schema::table('gold_prices', function (Blueprint $table) {
-            if (!Schema::hasIndex('gold_prices', 'idx_gold_prices_metal_currency_date')) {
-                $table->index(['metal', 'currency', 'date_recorded'], 'idx_gold_prices_metal_currency_date');
-            }
-        });
+      Schema::table('gold_prices', function (Blueprint $table) {
+
+    if (
+        Schema::hasColumn('gold_prices', 'metal') &&
+        Schema::hasColumn('gold_prices', 'currency') &&
+        Schema::hasColumn('gold_prices', 'date_recorded')
+    ) {
+
+        try {
+            $table->index(
+                ['metal', 'currency', 'date_recorded'],
+                'idx_gold_prices_metal_currency_date'
+            );
+        } catch (\Exception $e) {
+            // Index already exists
+        }
+    }
+
+});
     }
 
     public function down(): void

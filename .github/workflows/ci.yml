@@ -1,0 +1,138 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, dev, ci/test-pricing-codeowners ]
+  pull_request:
+    branches: [ main, dev ]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    env:
+      APP_ENV: testing
+      APP_DEBUG: true
+      DB_CONNECTION: mysql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_DATABASE: lfj_db
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      CACHE_STORE: redis
+      REDIS_HOST: 127.0.0.1
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: lfj_db
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=3
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd="redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+          extensions: mbstring, xml, ctype, iconv, mysql, pdo_mysql, redis
+          tools: composer:latest
+
+      - name: Verify PHP Version
+        run: php -v
+
+      - name: Clear Composer Cache (Force Fresh Install)
+        run: rm -rf ~/.composer/cache/*
+
+      - name: Install Composer Dependencies
+        working-directory: backend
+        run: composer install --no-interaction --no-progress --prefer-dist --optimize-autoloader
+
+      - name: Prepare Environment File
+        run: |
+          cd backend
+          cp .env.example .env || true
+          php artisan key:generate --force
+
+      - name: Update Environment Variables
+        run: |
+          cd backend
+          sed -i 's/^DB_DATABASE=.*/DB_DATABASE=lfj_db/' .env
+          sed -i 's/^DB_USERNAME=.*/DB_USERNAME=root/' .env
+          sed -i 's/^DB_PASSWORD=.*/DB_PASSWORD=root/' .env
+          sed -i 's/^DB_HOST=.*/DB_HOST=127.0.0.1/' .env
+          sed -i 's/^CACHE_STORE=.*/CACHE_STORE=redis/' .env
+          sed -i 's/^REDIS_HOST=.*/REDIS_HOST=127.0.0.1/' .env
+          php artisan config:clear
+
+      - name: Wait for MySQL to be ready
+        run: |
+          cd backend
+          echo "Waiting for MySQL on 127.0.0.1:3306..."
+          for i in {1..30}; do
+            php -r "try { new PDO('mysql:host=127.0.0.1;port=3306', 'root', 'root'); exit(0);} catch (Exception \$e) { exit(1); }" && echo "MySQL is accepting connections" && break
+            echo "Waiting for MySQL... ($i)"; sleep 2
+          done
+
+      - name: Run Database Migrations
+        working-directory: backend
+        run: php artisan migrate --force --quiet
+
+      - name: Run Unit Tests
+        working-directory: backend
+        run: DB_CONNECTION=sqlite DB_DATABASE=":memory:" CACHE_STORE=array QUEUE_CONNECTION=sync SESSION_DRIVER=array php artisan test --env=testing --parallel
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install Frontend Dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build Frontend
+        working-directory: frontend
+        run: npm run build
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and Push Backend Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/lfjproj-backend:latest
+            ghcr.io/${{ github.repository_owner }}/lfjproj-backend:${{ github.sha }}
+
+      - name: Build and Push Frontend Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/lfjproj-frontend:latest
+            ghcr.io/${{ github.repository_owner }}/lfjproj-frontend:${{ github.sha }}

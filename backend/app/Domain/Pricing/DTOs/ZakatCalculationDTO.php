@@ -19,9 +19,9 @@ class ZakatCalculationDTO
         public readonly array $debugSteps = [],
     ) {}
 
-    public function withDebugSteps(array $debugSteps): self
+    public function withDebugSteps(array $debugSteps): static
     {
-        return new self(
+        return new static(
             holdingWeight: $this->holdingWeight,
             nisabThreshold: $this->nisabThreshold,
             totalValue: $this->totalValue,

@@ -145,11 +145,13 @@ test('security headers are present', function () {
 });
 
 test('response compression works for json requests', function () {
-    $response = $this->getJson('/api/products');
+    $response = $this->withHeaders([
+        'Accept-Encoding' => 'gzip',
+    ])->getJson('/api/products');
 
-    // Check if compression headers are present (when supported)
-    $acceptEncoding = request()->header('Accept-Encoding', '');
-    if (strpos($acceptEncoding, 'gzip') !== false) {
+    $response->assertStatus(200);
+
+    if ($response->headers->has('Content-Encoding')) {
         $response->assertHeader('Content-Encoding', 'gzip');
     }
 });

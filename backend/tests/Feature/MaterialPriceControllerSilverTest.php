@@ -36,10 +36,11 @@ class MaterialPriceControllerSilverTest extends TestCase
         Cache::flush();
 
         // Insert a daily_metal_prices record (price_per_unit is per ounce)
-        DB::table('daily_metal_prices')->insert([
+        DB::table('daily_metal_prices')->updateOrInsert([
             'price_date' => now()->toDateString(),
             'base_currency' => 'USD',
             'metal_symbol' => 'XAG',
+        ], [
             'price_per_unit' => 26.0,
             'unit' => 'ounce',
             'created_at' => now(),
@@ -60,6 +61,17 @@ class MaterialPriceControllerSilverTest extends TestCase
     public function test_returns_404_when_no_silver_data()
     {
         Cache::flush();
+
+        // ensure seeded data does not interfere
+        DB::table('daily_metal_prices')
+            ->where('price_date', now()->toDateString())
+            ->where('base_currency', 'USD')
+            ->where('metal_symbol', 'XAG')
+            ->delete();
+
+        DB::table('gold_prices')
+            ->where('currency_code', 'USD')
+            ->delete();
 
         $response = $this->getJson('/api/tools/silver-price/USD');
 

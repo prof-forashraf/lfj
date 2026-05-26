@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Support\Str;
 
 test('profile page is displayed', function () {
     $user = User::factory()->create();
@@ -15,11 +16,13 @@ test('profile page is displayed', function () {
 test('profile information can be updated', function () {
     $user = User::factory()->create();
 
+    $email = strtolower('test+' . Str::random(8) . '@example.com');
+
     $response = $this
         ->actingAs($user)
         ->patch('/profile', [
             'name' => 'Test User',
-            'email' => 'test@example.com',
+            'email' => $email,
         ]);
 
     $response
@@ -29,7 +32,7 @@ test('profile information can be updated', function () {
     $user->refresh();
 
     $this->assertSame('Test User', $user->name);
-    $this->assertSame('test@example.com', $user->email);
+    $this->assertSame($email, $user->email);
     $this->assertNull($user->email_verified_at);
 });
 
