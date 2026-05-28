@@ -136,6 +136,9 @@ const Shop: React.FC = () => {
                   <Link to="/shop/collection/new-arrivals">New Arrivals</Link>
                 </Button>
               </div>
+              <div className="text-sm text-white/80 mb-8">
+                Read styling guides for gift ideas and effortless layering.
+              </div>
 
               <div className="flex flex-wrap justify-center gap-6 text-white/80 text-sm md:text-base">
                 <div className="flex items-center gap-2">
@@ -292,6 +295,9 @@ const Shop: React.FC = () => {
                     </h2>
                     <p className="text-gray-600 max-w-xl">
                       Our handpicked selection of stunning jewellery pieces chosen for everyday polish and thoughtful gifting.
+                    </p>
+                    <p className="text-sm text-gray-500 mt-3 max-w-xl">
+                      These pieces are selected with attention to balance, quality and the confidence you want to feel when wearing jewellery.
                     </p>
                   </div>
                   <div className="mt-4 md:mt-0">
