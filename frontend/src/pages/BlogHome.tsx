@@ -258,10 +258,29 @@ const BlogHome: React.FC = () => {
             {selectedCategoryName || "The Journal"}
           </h1>
           <p className="mt-3 text-lg text-gray-600 max-w-2xl mx-auto font-lato">
-            Insights, inspiration, and stories from the world of fashion
-            jewellery.
+            Insights, inspiration, and stories from the world of fashion jewellery.
           </p>
         </header>
+
+        <section className="mb-12 rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
+          <div className="grid gap-6 lg:grid-cols-3">
+            <Link to="/tools/ring-size-converter" className="group rounded-3xl border border-slate-200 p-6 transition hover:shadow-lg">
+              <p className="text-sm uppercase tracking-[0.26em] text-rose-500 mb-3">Sizing guidance</p>
+              <h2 className="text-xl font-semibold text-dark-slate mb-2">Find the right ring size</h2>
+              <p className="text-sm text-gray-600">Avoid returns and choose a fit that feels comfortable and elegant.</p>
+            </Link>
+            <Link to="/tools/gold-prices" className="group rounded-3xl border border-slate-200 p-6 transition hover:shadow-lg">
+              <p className="text-sm uppercase tracking-[0.26em] text-amber-500 mb-3">Metal value</p>
+              <h2 className="text-xl font-semibold text-dark-slate mb-2">Check today’s gold pricing</h2>
+              <p className="text-sm text-gray-600">Use live pricing to compare pieces with confidence.</p>
+            </Link>
+            <Link to="/shop" className="group rounded-3xl border border-slate-200 p-6 transition hover:shadow-lg">
+              <p className="text-sm uppercase tracking-[0.26em] text-purple-500 mb-3">Curated shopping</p>
+              <h2 className="text-xl font-semibold text-dark-slate mb-2">Browse featured collections</h2>
+              <p className="text-sm text-gray-600">Turn inspiration into beautiful jewellery you can wear now.</p>
+            </Link>
+          </div>
+        </section>
 
         {/* Category Filters */}
         <ScrollArea className="w-full whitespace-nowrap rounded-md pb-4 mb-12">

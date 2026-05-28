@@ -31,9 +31,10 @@ if (Get-Command composer -ErrorAction SilentlyContinue) {
 }
 
 Set-Location $RepoRoot
-if (Test-Path './deploy-package.zip') { Remove-Item './deploy-package.zip' -Force }
-Write-Host 'Creating deploy-package.zip (backend only)'
+$DeployZip = Join-Path $RepoRoot 'deploy-package.zip'
+if (Test-Path $DeployZip) { Remove-Item $DeployZip -Force }
+Write-Host "Creating deploy-package.zip at $DeployZip (backend only)"
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-[IO.Compression.ZipFile]::CreateFromDirectory((Resolve-Path ./backend).Path, (Resolve-Path ./deploy-package.zip).Path)
+[IO.Compression.ZipFile]::CreateFromDirectory((Resolve-Path ./backend).Path, $DeployZip)
 
 Write-Host 'Done. Upload deploy-package.zip to your cPanel account and extract.'

@@ -8,7 +8,6 @@ import {
   ShieldCheck,
   Medal,
   Sparkles,
-  Star,
   Gem,
   Microscope,
   Scale,
@@ -112,6 +111,56 @@ const Quality: React.FC = () => {
             viewport={{ once: true, amount: 0.3 }}
             variants={sectionVariants}
           >
+            <div className="max-w-4xl mx-auto text-center mb-12">
+              <p className="text-sm uppercase tracking-[0.3em] text-amber-600 mb-3">How we evaluate</p>
+              <h2 className="text-3xl font-playfair font-bold text-dark-slate mb-4">
+                What we look for in every piece
+              </h2>
+              <p className="text-muted-foreground leading-relaxed">
+                Our quality standards are rooted in material integrity, craftsmanship and the ability of a piece to feel polished in real life.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+              <Card className="border border-gray-200 bg-white p-6 shadow-sm">
+                <CardHeader>
+                  <CardTitle className="text-xl font-semibold text-dark-slate mb-3">Material clarity</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    We favour pieces with clear metal and stone descriptions, solid finishes and materials built to look beautiful over time.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className="border border-gray-200 bg-white p-6 shadow-sm">
+                <CardHeader>
+                  <CardTitle className="text-xl font-semibold text-dark-slate mb-3">Refined styling</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Each selection is evaluated for how it layers, pairs with wardrobe staples and still feels special enough to gift.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className="border border-gray-200 bg-white p-6 shadow-sm">
+                <CardHeader>
+                  <CardTitle className="text-xl font-semibold text-dark-slate mb-3">Seller reliability</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    We look for sellers with strong reviews, consistent delivery and a track record for accurate product presentation.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </motion.section>
+
+          <motion.section
+            className="mb-20"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+            variants={sectionVariants}
+          >
             <div className="text-center mb-12">
               <h2 className="text-3xl font-playfair font-bold text-dark-slate mb-4">
                 Spotlight on Materials
@@ -145,7 +194,6 @@ const Quality: React.FC = () => {
             </Tabs>
           </motion.section>
 
-          {/* --- UPGRADED: Customer Reviews Section --- */}
           <motion.section
             className="py-20 bg-dark-slate text-white rounded-xl"
             initial="hidden"
@@ -155,21 +203,33 @@ const Quality: React.FC = () => {
           >
             <div className="container mx-auto px-6">
               <h2 className="text-4xl font-playfair font-bold text-center mb-12">
-                Voices of Trust
+                Why our curation feels different
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <ReviewCard
-                  name="Sarah M."
-                  comment="The quality truly stands out. You can feel the difference. I'm so glad I found this site!"
-                />
-                <ReviewCard
-                  name="Jessica L."
-                  comment="I've purchased multiple recommended items, and the quality is consistently amazing. My go-to for jewelry inspiration!"
-                />
-                <ReviewCard
-                  name="Amanda R."
-                  comment="Finally, a place that curates beautiful jewelry that is also high-quality and built to last. I trust their selections completely."
-                />
+                <Card className="bg-white/10 border border-white/10 p-8 shadow-lg">
+                  <CardContent>
+                    <p className="text-lg font-semibold text-white mb-4">Selective, not all-inclusive</p>
+                    <p className="text-sm text-gray-200 leading-relaxed">
+                      We choose only the jewellery pieces that strike the right balance between finish, fit and lasting style.
+                    </p>
+                  </CardContent>
+                </Card>
+                <Card className="bg-white/10 border border-white/10 p-8 shadow-lg">
+                  <CardContent>
+                    <p className="text-lg font-semibold text-white mb-4">Transparent recommendations</p>
+                    <p className="text-sm text-gray-200 leading-relaxed">
+                      Our editorial process is guided by product quality, seller reliability and thoughtful design, not pushy promotion.
+                    </p>
+                  </CardContent>
+                </Card>
+                <Card className="bg-white/10 border border-white/10 p-8 shadow-lg">
+                  <CardContent>
+                    <p className="text-lg font-semibold text-white mb-4">Built for confidence</p>
+                    <p className="text-sm text-gray-200 leading-relaxed">
+                      These selections are made so you can shop with greater clarity about what will look beautiful, wear well and feel special.
+                    </p>
+                  </CardContent>
+                </Card>
               </div>
             </div>
           </motion.section>
@@ -235,23 +295,6 @@ const MaterialTabContent: React.FC<{
       </CardContent>
     </Card>
   </TabsContent>
-);
-
-const ReviewCard: React.FC<{ name: string; comment: string }> = ({
-  name,
-  comment,
-}) => (
-  <Card className="bg-white/5 border-white/20">
-    <CardContent className="pt-6">
-      <div className="flex items-center gap-1 mb-4">
-        {[...Array(5)].map((_, i) => (
-          <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-        ))}
-      </div>
-      <p className="text-gray-200 italic mb-4">"{comment}"</p>
-      <p className="font-semibold text-white text-right">- {name}</p>
-    </CardContent>
-  </Card>
 );
 
 export default Quality;

@@ -176,6 +176,31 @@ const BlogPostPage: React.FC = () => {
 
         <div className="blog-content" dangerouslySetInnerHTML={{ __html: post.content_html }} />
 
+        <section className="mt-16 pt-12 border-t border-gray-200">
+          <div className="grid gap-6 lg:grid-cols-3 items-start">
+            <div className="lg:col-span-2">
+              <h2 className="text-3xl font-playfair font-semibold text-dark-slate mb-4">Shop this story</h2>
+              <p className="text-gray-600 leading-relaxed mb-6">
+                Explore curated collections that reflect the themes in this article and help you find jewellery that feels meaningful and modern.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                {firstCategorySlug ? (
+                  <Button asChild variant="secondary" className="rounded-full px-6 py-3">
+                    <Link to={`/shop/category/${firstCategorySlug}`}>Browse related collections</Link>
+                  </Button>
+                ) : (
+                  <Button asChild variant="secondary" className="rounded-full px-6 py-3">
+                    <Link to="/shop">Browse collections</Link>
+                  </Button>
+                )}
+                <Button asChild variant="outline" className="rounded-full px-6 py-3">
+                  <Link to="/tools/ring-size-converter">Check ring size</Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {post.tags?.length > 0 && (
           <div className="mt-10 pt-8 border-t border-gray-200">
             <div className="flex flex-wrap items-center gap-2">

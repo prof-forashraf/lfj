@@ -87,11 +87,22 @@ const ShopCategory: React.FC = () => {
           <h1 className="text-4xl lg:text-5xl font-playfair font-bold text-dark-slate">
             {categoryName}
           </h1>
-          {currentCategory?.description && (
-            <p className="mt-3 text-lg text-gray-600 max-w-2xl mx-auto font-lato">
-              {currentCategory.description}
+          <div className="mt-6 max-w-3xl mx-auto">
+            <p className="text-lg text-gray-600 leading-relaxed font-lato">
+              {currentCategory?.description || `Explore beautifully crafted ${categoryName.toLowerCase()} designed for refined everyday wear and mindful gifting.`}
             </p>
-          )}
+            <p className="mt-4 text-sm text-gray-500">
+              This collection is ideal for those who love polished details, balanced sparkle and pieces that feel elegant with every outfit.
+            </p>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <Link to="/blog" className="text-sm font-medium text-primary hover:text-primary-700 transition-colors">
+                Read style guides
+              </Link>
+              <Link to="/shop" className="text-sm font-medium text-primary hover:text-primary-700 transition-colors">
+                Browse all collections
+              </Link>
+            </div>
+          </div>
         </header>
 
         {isLoading ? (

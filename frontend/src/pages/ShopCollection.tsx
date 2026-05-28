@@ -20,6 +20,12 @@ import { getPlaceholderImageUrl } from '@/lib/imageUrl';
 
 const ShopCollection: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
+  const collectionName = slug
+    ? slug
+        .split('-')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
+    : 'Collection';
   
   // Fetch collection details  
   const { data: products = [], isLoading: loadingProducts, isError: productsError } = useQuery({
@@ -81,8 +87,13 @@ const ShopCollection: React.FC = () => {
 
         {/* Collection Header */}
         <div className="mb-10">
-          <h1 className="text-3xl font-bold text-navy-800">{slug?.charAt(0).toUpperCase() + slug?.slice(1)} Collection</h1>
-          <p className="text-gray-600 mt-2 max-w-2xl">Discover our curated selection of {slug} pieces.</p>
+          <h1 className="text-3xl font-bold text-navy-800">{collectionName} Collection</h1>
+          <p className="text-gray-600 mt-2 max-w-2xl leading-relaxed">
+            Discover a thoughtfully edited collection designed for effortless layering, memorable gifting and everyday polish.
+          </p>
+          <p className="text-sm text-gray-500 mt-4 max-w-2xl">
+            Perfect for special moments, elegant everyday style and anyone who loves jewellery with refined presence.
+          </p>
         </div>
 
         {/* Products Grid */}
@@ -136,6 +147,20 @@ const ShopCollection: React.FC = () => {
             </Button>
           </div>
         )}
+
+        <div className="mb-16 rounded-3xl bg-rose-50 border border-rose-100 p-8">
+          <h2 className="text-2xl font-semibold text-navy-800 mb-3">Want a more polished edit?</h2>
+          <p className="text-gray-600 mb-6 max-w-3xl">
+            Explore matching collections and curated categories for gifts, date nights and elevated daily wear.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            {['Necklaces', 'Earrings', 'Bracelets', 'Rings'].map((cat) => (
+              <Button key={cat} variant="outline" asChild>
+                <Link to={`/shop/category/${cat.toLowerCase()}`}>{cat}</Link>
+              </Button>
+            ))}
+          </div>
+        </div>
 
         {/* Related Categories */}
         <div className="mt-16">
