@@ -123,6 +123,12 @@ const Footer: React.FC = () => {
           </div>
         </div>
 
+        <div className="rounded-3xl border border-amber-400/10 bg-white/5 p-6 mb-8 text-center text-sm text-gray-200">
+          <p>
+            We curate jewellery with care and partner with trusted sellers. We may receive a small commission from qualifying purchases at no additional cost to you.
+          </p>
+        </div>
+
         {/* Bottom Section */}
         <div className="border-t border-amber-400/20 pt-8 mt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">

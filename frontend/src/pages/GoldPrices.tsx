@@ -444,6 +444,33 @@ const GoldPrices: React.FC = () => {
             </CardContent>
           </Card>
 
+          <div className="mt-12 grid gap-6 lg:grid-cols-2">
+            <Card className="bg-white/80">
+              <CardHeader>
+                <CardTitle>How to use this tool</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm text-gray-600">
+                <p>Choose your currency, refresh live prices, and compare current rates across 24k, 22k, 18k and 14k gold.</p>
+                <p>Use the historical chart to see whether prices are trending higher or lower over recent weeks and months.</p>
+                <p>Keep in mind the retail price may include design, shipping and retailer fees.</p>
+              </CardContent>
+            </Card>
+            <Card className="bg-white/80">
+              <CardHeader>
+                <CardTitle>Why this matters</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm text-gray-600">
+                <p>Market prices give you context for value, but they are only one part of the purchase decision.</p>
+                <p>After checking rates, compare them with product descriptions and our curated collections for a fuller view.</p>
+                <p>Avoid treating market price as a retail quote; it is a reference value only.</p>
+              </CardContent>
+            </Card>
+          </div>
+          <div className="mt-6 text-center">
+            <Button asChild className="bg-primary text-white px-6 py-3 hover:bg-primary/90">
+              <Link to="/shop">Browse curated collections</Link>
+            </Button>
+          </div>
           <div className="mt-12">
             <RelatedToolsCard currentPath="/tools/gold-prices" />
           </div>

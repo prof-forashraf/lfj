@@ -2,7 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import SEOMetaTags from '@/components/blog/SEOMetaTags';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Calculator, Gem, Star, Diamond, Camera, Search } from 'lucide-react';
 
 const tools = [
@@ -176,8 +178,8 @@ const Tools: React.FC = () => {
                 Why Use Our Professional Tools?
               </h2>
               <p className="text-muted-foreground leading-relaxed text-lg mb-6">
-                Our comprehensive suite of professional-grade calculators and converters are designed to provide accurate, 
-                real-time information to help jewellery enthusiasts, investors, and professionals 
+                Our comprehensive suite of professional-grade calculators and converters are designed to provide accurate,
+                real-time information to help jewellery enthusiasts, investors, and professionals
                 make informed decisions about precious metals and gemstones.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
@@ -204,6 +206,80 @@ const Tools: React.FC = () => {
                 </div>
               </div>
             </div>
+          </div>
+
+          <div className="mt-16 grid gap-8 lg:grid-cols-2">
+            <Card className="rounded-3xl border border-border/50 bg-white p-8 shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-2xl font-playfair text-foreground mb-4">How to use these tools</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-muted-foreground leading-relaxed">
+                  Start with the gold price tracker to orient the value of metal and refine your search by carat, size or resale value. Each tool is designed to answer a specific question before you shop.
+                </p>
+                <ul className="space-y-3 text-sm text-gray-600">
+                  <li>• Use the ring size tool before selecting rings to avoid returns and ensure a comfortable fit.</li>
+                  <li>• Check today’s gold rates before shopping for gold-plated or solid gold pieces.</li>
+                  <li>• Compare resale value estimates alongside gifting choices for a confident purchase.</li>
+                </ul>
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <Button asChild variant="secondary" className="rounded-full px-6 py-3">
+                    <Link to="/shop">Browse collections</Link>
+                  </Button>
+                  <Button asChild variant="outline" className="rounded-full px-6 py-3">
+                    <Link to="/tools/ring-size-converter">Measure ring size</Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="rounded-3xl border border-border/50 bg-white p-8 shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-2xl font-playfair text-foreground mb-4">Tips for better results</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-muted-foreground leading-relaxed">
+                  Use the tools as a guide rather than a final decision. The right piece also depends on proportion, styling and the emotion you want to carry.
+                </p>
+                <ul className="space-y-3 text-sm text-gray-600">
+                  <li>• Measure without squeezing too tight. A ring should slide on snugly but still rotate.</li>
+                  <li>• Match gold tone with your existing jewellery for a cohesive look.</li>
+                  <li>• Pair inspiration from our journal with the tools to make a confident choice.</li>
+                </ul>
+                <div className="mt-6">
+                  <Button asChild className="rounded-full bg-primary text-white px-6 py-3 hover:bg-primary/90">
+                    <Link to="/blog">Read styling guides</Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="mt-16 max-w-5xl mx-auto">
+            <div className="mb-10 text-center">
+              <p className="text-sm uppercase tracking-[0.2em] text-primary-600 mb-3">Tool guidance</p>
+              <h2 className="text-3xl font-playfair font-semibold text-foreground">Common questions answered</h2>
+            </div>
+            <Accordion type="single" collapsible className="space-y-4">
+              <AccordionItem value="size-guide">
+                <AccordionTrigger className="text-left text-lg font-semibold">How do I use the ring size converter correctly?</AccordionTrigger>
+                <AccordionContent className="text-sm text-gray-600 leading-relaxed">
+                  Measure your ring size with a flexible tape or cord, then compare it to a standard ring chart. If you are between sizes, choose the larger size for comfort.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="gold-price">
+                <AccordionTrigger className="text-left text-lg font-semibold">Why should I check gold price before shopping?</AccordionTrigger>
+                <AccordionContent className="text-sm text-gray-600 leading-relaxed">
+                  Gold rates change daily, and even small shifts can affect the value of gold jewellery. Checking price first helps you choose pieces with better value and timing.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="tools-slots">
+                <AccordionTrigger className="text-left text-lg font-semibold">What should I do after using the tools?</AccordionTrigger>
+                <AccordionContent className="text-sm text-gray-600 leading-relaxed">
+                  Use your findings to narrow down categories, then explore our curated collections for solutions that match your size, metal preference and gifting intention.
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
         </div>
       </div>

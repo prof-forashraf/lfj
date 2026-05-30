@@ -48,21 +48,36 @@ const Landing: React.FC = () => {
 
       <HeroSection />
 
-      {/* Category Showcase */}
-      <Suspense fallback={<div className="container mx-auto px-6 py-24"><Skeleton className="h-10 w-1/3 mx-auto mb-12 rounded" /><div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">{Array.from({ length: 4 }).map((_, i) => (<Skeleton key={i} className="h-80 rounded-lg" />))}</div></div>}>
-        {categoriesLoading ? (
-          <div className="container mx-auto px-6 py-24">
-            <Skeleton className="h-10 w-1/3 mx-auto mb-12 rounded" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <Skeleton key={i} className="h-80 rounded-lg" />
-              ))}
-            </div>
+      <section id="shop-by-category" className="bg-white py-24">
+        <div className="container mx-auto px-6">
+          <div className="max-w-3xl mx-auto text-center mb-12">
+            <span className="inline-block px-4 py-2 mb-4 text-sm font-medium uppercase tracking-[0.3em] text-amber-600 bg-amber-50 rounded-full">
+              Curated Discovery
+            </span>
+            <h2 className="text-4xl md:text-5xl font-playfair font-bold text-dark-slate mb-4">
+              Shop by style, story, and occasion
+            </h2>
+            <p className="text-lg text-gray-600 leading-relaxed">
+              Every category is selected to feel polished, thoughtful and gift-ready—so you can shop with confidence.
+            </p>
           </div>
-        ) : categoriesForShowcase.length > 0 ? (
-          <ShopByCategory categories={categoriesForShowcase} />
-        ) : null}
-      </Suspense>
+        </div>
+
+        <Suspense fallback={<div className="container mx-auto px-6 py-24"><Skeleton className="h-10 w-1/3 mx-auto mb-12 rounded" /><div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">{Array.from({ length: 4 }).map((_, i) => (<Skeleton key={i} className="h-80 rounded-lg" />))}</div></div>}>
+          {categoriesLoading ? (
+            <div className="container mx-auto px-6 py-24">
+              <Skeleton className="h-10 w-1/3 mx-auto mb-12 rounded" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <Skeleton key={i} className="h-80 rounded-lg" />
+                ))}
+              </div>
+            </div>
+          ) : categoriesForShowcase.length > 0 ? (
+            <ShopByCategory categories={categoriesForShowcase} />
+          ) : null}
+        </Suspense>
+      </section>
 
       {/* Featured Products */}
       <Suspense fallback={<div className="bg-luxury-navy py-24"><div className="container mx-auto px-6"><Skeleton className="h-10 w-1/3 mx-auto mb-12 rounded bg-white/20" /><div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">{Array.from({ length: 4 }).map((_, i) => (<Skeleton key={i} className="h-96 rounded-lg bg-white/20" />))}</div></div></div>}>
@@ -186,6 +201,32 @@ const Landing: React.FC = () => {
           <JournalGrid posts={latestBlogs} />
         ) : null}
       </Suspense>
+
+      <section className="bg-gradient-to-r from-gray-900 via-black to-gray-800 py-16">
+        <div className="container mx-auto px-6 text-center">
+          <div className="max-w-3xl mx-auto">
+            <p className="text-sm uppercase tracking-[0.3em] text-gray-400 mb-4">Style with insight</p>
+            <h2 className="text-3xl md:text-4xl font-playfair font-bold text-white mb-4">
+              Guides and tools to help you buy with confidence
+            </h2>
+            <p className="text-lg text-gray-300 mx-auto mb-8 leading-relaxed">
+              Learn how to choose the right piece, size it perfectly, and style it beautifully for every occasion.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Button asChild size="lg" className="bg-amber-400 text-black hover:bg-amber-300 px-8 py-4 rounded-full">
+                <Link to="/tools">Use Style Tools</Link>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="border-white/20 text-white px-8 py-4 rounded-full">
+                <Link to="/blog">Read the Journal</Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="container mx-auto px-6 py-10 text-center text-sm text-gray-500">
+        <p>Our curated selections are chosen for quality, wearability and gift appeal. We may earn a small commission from qualifying purchases at no extra cost to you.</p>
+      </div>
     </>
   );
 };
