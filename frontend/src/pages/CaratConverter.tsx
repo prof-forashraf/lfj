@@ -256,7 +256,7 @@ const CaratConverter: React.FC = () => {
           </div>
 
           {/* Information */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <Card className="bg-white/60 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="text-xl font-playfair">
@@ -282,43 +282,33 @@ const CaratConverter: React.FC = () => {
             <Card className="bg-white/60 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle className="text-xl font-playfair">
-                  How to use this tool
+                  Conversion Formulas
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4 text-sm text-gray-600">
-                <div>Type a carat value to see the matching percentage and fineness.</div>
-                <div>Type a percentage value to find the equivalent carat and fineness.</div>
-                <div>Use the common values buttons for standard gold purities.</div>
-                <div>Keep values within the expected range for the most accurate conversions.</div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white/60 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="text-xl font-playfair">
-                  What to do next
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4 text-sm text-gray-600">
+              <CardContent className="space-y-4">
                 <div>
-                  Avoid assuming these values represent the retailer’s final price.
+                  <strong>Carat to Percentage:</strong>
+                  <br />
+                  <code className="text-sm bg-muted px-2 py-1 rounded">
+                    Percentage = (Carat ÷ 24) × 100
+                  </code>
                 </div>
                 <div>
-                  Compare the purity details with product descriptions before you shop.
+                  <strong>Percentage to Fineness:</strong>
+                  <br />
+                  <code className="text-sm bg-muted px-2 py-1 rounded">
+                    Fineness = Percentage × 10
+                  </code>
                 </div>
                 <div>
-                  Use the customers’ product information and our curated collections to guide your choice.
+                  <strong>Carat to Fineness:</strong>
+                  <br />
+                  <code className="text-sm bg-muted px-2 py-1 rounded">
+                    Fineness = (Carat ÷ 24) × 1000
+                  </code>
                 </div>
               </CardContent>
             </Card>
-          </div>
-          <div className="mt-6 rounded-3xl border border-emerald-200 bg-emerald-50 p-6 text-sm text-emerald-800">
-            After using this tool, compare these purity values with the descriptions in our shop to make a more informed choice.
-          </div>
-          <div className="mt-6 text-center">
-            <Button asChild className="bg-emerald-700 text-white px-8 py-3 hover:bg-emerald-800">
-              <Link to="/shop">Browse curated gold jewellery</Link>
-            </Button>
           </div>
         </div>
       </div>

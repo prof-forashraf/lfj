@@ -88,12 +88,8 @@ const Shop: React.FC = () => {
                   Curated Elegance
                 </span>
               </h1>
-              <p className="text-xl md:text-2xl lg:text-3xl text-white/95 mb-6 font-light tracking-wide">
-                Find jewellery that feels personal, polished and easy to wear.
-              </p>
-
-              <p className="text-sm text-white/80 max-w-2xl mx-auto mb-8">
-                Thoughtfully curated Amazon jewellery with the clarity and confidence you need for gifting and everyday style.
+              <p className="text-xl md:text-2xl lg:text-3xl text-white/95 mb-10 font-light tracking-wide">
+                Discover Your Next Signature Piece
               </p>
 
               <div className="max-w-2xl mx-auto mb-10">
@@ -135,9 +131,6 @@ const Shop: React.FC = () => {
                 >
                   <Link to="/shop/collection/new-arrivals">New Arrivals</Link>
                 </Button>
-              </div>
-              <div className="text-sm text-white/80 mb-8">
-                Read styling guides for gift ideas and effortless layering.
               </div>
 
               <div className="flex flex-wrap justify-center gap-6 text-white/80 text-sm md:text-base">
@@ -194,36 +187,6 @@ const Shop: React.FC = () => {
 
         {!showSearchResults && (
           <>
-            {/* --- SHOP BY OCCASION --- */}
-            <section className="py-16 bg-gradient-to-r from-rose-50 via-white to-amber-50">
-              <div className="container mx-auto px-6">
-                <div className="text-center max-w-3xl mx-auto mb-12">
-                  <p className="text-sm uppercase tracking-[0.28em] font-semibold text-rose-500 mb-3">Style destination</p>
-                  <h2 className="text-3xl md:text-4xl font-bold text-navy-800 mb-4">Shop by occasion</h2>
-                  <p className="text-gray-600 leading-relaxed">
-                    Discover jewellery that works beautifully for gifts, everyday elegance and special celebrations.
-                  </p>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {[
-                    { label: 'Everyday elegance', slug: 'necklaces' },
-                    { label: 'Gift-worthy pieces', slug: 'rings' },
-                    { label: 'Statement accents', slug: 'earrings' },
-                    { label: 'Layered luxury', slug: 'bracelets' },
-                  ].map((item) => (
-                    <Link
-                      key={item.slug}
-                      to={`/shop/category/${item.slug}`}
-                      className="block rounded-3xl border border-slate-200 bg-white p-8 text-center transition hover:shadow-lg"
-                    >
-                      <p className="text-sm uppercase tracking-[0.2em] text-rose-500 mb-3">{item.label}</p>
-                      <p className="text-lg font-semibold text-navy-800">Explore</p>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </section>
-
             {/* --- OUR COLLECTIONS SECTION --- */}
             <section id="collections" className="py-16 bg-gray-50">
               <div className="container mx-auto px-6">
@@ -231,7 +194,8 @@ const Shop: React.FC = () => {
                   Our Collections
                 </h2>
                 <p className="text-gray-600 max-w-2xl mx-auto text-center mb-10">
-                  Browse our carefully curated collections designed to match every occasion and style preference.
+                  Browse our carefully curated collections designed to match
+                  every occasion and style preference
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {isLoadingCategories
@@ -294,10 +258,7 @@ const Shop: React.FC = () => {
                       Featured Products
                     </h2>
                     <p className="text-gray-600 max-w-xl">
-                      Our handpicked selection of stunning jewellery pieces chosen for everyday polish and thoughtful gifting.
-                    </p>
-                    <p className="text-sm text-gray-500 mt-3 max-w-xl">
-                      These pieces are selected with attention to balance, quality and the confidence you want to feel when wearing jewellery.
+                      Our handpicked selection of stunning jewelry pieces
                     </p>
                   </div>
                   <div className="mt-4 md:mt-0">
