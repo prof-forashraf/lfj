@@ -92,16 +92,29 @@ jobs:
         working-directory: backend
         run: DB_CONNECTION=sqlite DB_DATABASE=":memory:" CACHE_STORE=array QUEUE_CONNECTION=sync SESSION_DRIVER=array php artisan test --env=testing --parallel
 
+      - name: Check for frontend changes
+        id: check_front
+        run: |
+          # Compare current HEAD with base branch to see if frontend files changed
+          git fetch origin ${{ github.event.pull_request.base.ref }} || true
+          if git diff --name-only HEAD...origin/${{ github.event.pull_request.base.ref }} | grep -q '^frontend/'; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
       - name: Install Frontend Dependencies
+        if: steps.check_front.outputs.changed == 'true'
         working-directory: frontend
         run: npm ci
 
       - name: Build Frontend
+        if: steps.check_front.outputs.changed == 'true'
         working-directory: frontend
         run: npm run build
 
