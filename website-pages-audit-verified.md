@@ -123,7 +123,15 @@ Generated on 2026-05-30.
 ## Fix applied (local guidance)
 
 - I added an Apache virtual-host snippet at `deploy/lfjproj-vhost.conf` and a short setup guide at `deploy/VHOST_INSTRUCTIONS.md` to help you serve the app at `http://lfjproj.local` via Wampserver.
+- I also added `deploy/setup-vhost.ps1` and `deploy/fix-wamp-vhosts.ps1` to automate local vhost setup and correct Wamp log path issues safely.
+- I added `deploy/smoke-test.php` to validate important routes consistently against a local base URL.
 - If you prefer to continue using the Laravel dev server for testing, it's OK — but configuring the vhost will make the app available on port 80 and resolve the initial Wampserver index collision.
+
+## Root cause and long-term stability
+
+- The main website audit failures were caused by the project being served under the default Wampserver root instead of a dedicated Apache virtual host; the app itself is reachable and returns valid content when served through Laravel or a proper vhost.
+- The stable long-term fix is to use a dedicated vhost for `lfjproj.local` and keep the local dev workflow based on `php artisan serve` + Vite for rapid development.
+- I also improved automation by adding route smoke tests that can be run locally and in CI to prevent regressions in page availability.
 
 ## Fixes I applied locally
 

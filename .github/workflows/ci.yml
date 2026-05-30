@@ -105,6 +105,24 @@ jobs:
         working-directory: frontend
         run: npm run build
 
+      - name: Start Laravel Development Server for Smoke Test
+        working-directory: backend
+        run: |
+          nohup php artisan serve --host 127.0.0.1 --port 8000 > /tmp/laravel.log 2>&1 &
+          for i in {1..15}; do
+            if curl -s http://127.0.0.1:8000/ >/dev/null; then
+              echo "Laravel dev server is ready"
+              exit 0
+            fi
+            echo "Waiting for Laravel dev server... ($i)"
+            sleep 2
+          done
+          echo "Laravel dev server did not become ready in time"
+          exit 1
+
+      - name: Run Smoke Test Against Local App
+        run: php ./deploy/smoke-test.php http://127.0.0.1:8000
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:

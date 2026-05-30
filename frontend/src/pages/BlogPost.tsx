@@ -129,7 +129,7 @@ const BlogPostPage: React.FC = () => {
                   <AvatarImage src={undefined} alt={post.author.name} />
                   <AvatarFallback className="bg-gray-200 text-gray-700">{post.author.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                 </Avatar>
-                <span>By <Link to={`/author/${post.author.id}`} className="font-medium text-dark-slate hover:text-primary-gold">{post.author.name}</Link></span>
+                <span>By <span className="font-medium text-dark-slate">{post.author.name}</span></span>
               </div>
             )}
             <div className="flex items-center gap-1.5">
@@ -225,7 +225,7 @@ const BlogPostPage: React.FC = () => {
               <div className="flex-1">
                 <p className="text-xs text-muted-foreground uppercase tracking-wider">Written By</p>
                 <h3 className="text-xl md:text-2xl font-semibold font-playfair text-dark-slate mt-1">
-                  <Link to={`/author/${post.author.id}`} className="hover:text-primary-gold">{post.author.name}</Link>
+                  {post.author.name}
                 </h3>
                 <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
                   A passionate writer and jewellery enthusiast at LatestFashionJewellery.com, dedicated to bringing you the most sparkling content.
