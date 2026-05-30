@@ -52,17 +52,25 @@ return new class extends Migration
             }
         });
 
-        Schema::table('gold_prices', function (Blueprint $table) {
-            // Ensure we only try to add indexes for columns that exist in the schema.
-            // The `gold_prices` table uses `currency_code` for the currency field.
-            if (Schema::hasColumn('gold_prices', 'currency_code') && Schema::hasColumn('gold_prices', 'date_recorded')) {
-                try {
-                    $table->index(['currency_code', 'date_recorded'], 'idx_gold_prices_currency_date');
-                } catch (\Exception $e) {
-                    // Index already exists or cannot be created on this platform; ignore.
-                }
-            }
-        });
+      Schema::table('gold_prices', function (Blueprint $table) {
+
+    if (
+        Schema::hasColumn('gold_prices', 'metal') &&
+        Schema::hasColumn('gold_prices', 'currency') &&
+        Schema::hasColumn('gold_prices', 'date_recorded')
+    ) {
+
+        try {
+            $table->index(
+                ['metal', 'currency', 'date_recorded'],
+                'idx_gold_prices_metal_currency_date'
+            );
+        } catch (\Exception $e) {
+            // Index already exists
+        }
+    }
+
+});
     }
 
     public function down(): void

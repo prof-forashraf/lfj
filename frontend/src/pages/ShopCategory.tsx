@@ -45,10 +45,6 @@ const ShopCategory: React.FC = () => {
     slug?.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()) ||
     "Category";
 
-  const categoryIntroText =
-    currentCategory?.description ||
-    `Our ${categoryName.toLowerCase()} edit brings together pieces chosen for effortless polish, thoughtful detail and reliable shine. It is designed to work as well for daily wear as for thoughtful gifting, with styles that layer beautifully and feel elevated without being overstated. Look for pieces that suit your personal palette and the occasion—whether it’s a quiet weekday, a dinner out, or a special celebration. Explore matching collections, size advice and styling ideas that make your choice feel clear and intentional.`;
-
   return (
     <>
       <Helmet>
@@ -91,25 +87,11 @@ const ShopCategory: React.FC = () => {
           <h1 className="text-4xl lg:text-5xl font-playfair font-bold text-dark-slate">
             {categoryName}
           </h1>
-          <div className="mt-6 max-w-3xl mx-auto">
-            <p className="text-lg text-gray-600 leading-relaxed font-lato">
-              {categoryIntroText}
+          {currentCategory?.description && (
+            <p className="mt-3 text-lg text-gray-600 max-w-2xl mx-auto font-lato">
+              {currentCategory.description}
             </p>
-            <p className="mt-4 text-sm text-gray-500">
-              This edit is built for people who want jewellery that feels considered, wearable and quietly distinctive.
-            </p>
-            <div className="mt-4 text-sm text-gray-500">
-              We curate products from trusted Amazon partners, and checkout is completed on the retailer’s site for secure payment and shipping.
-            </div>
-            <div className="mt-6 flex flex-wrap justify-center gap-3">
-              <Link to="/blog" className="text-sm font-medium text-primary hover:text-primary-700 transition-colors">
-                Read style guides
-              </Link>
-              <Link to="/shop" className="text-sm font-medium text-primary hover:text-primary-700 transition-colors">
-                Browse all collections
-              </Link>
-            </div>
-          </div>
+          )}
         </header>
 
         {isLoading ? (
@@ -139,36 +121,10 @@ const ShopCategory: React.FC = () => {
             <InfoIcon className="mx-auto h-12 w-12 text-gray-400 mb-4" />
             <h3 className="text-xl font-medium">No Products Found</h3>
             <p className="mt-1 text-sm text-gray-500">
-              There are currently no products in the {categoryName} collection. Please check our broader curated categories below for similar pieces.
+              There are currently no products in the {categoryName} collection.
             </p>
           </div>
         )}
-
-        <section className="mt-16 bg-gray-50 rounded-3xl border border-gray-200 p-8">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-2xl font-semibold text-dark-slate mb-4">Need a quick answer?</h2>
-            <div className="grid gap-6 md:grid-cols-3">
-              <div>
-                <p className="font-semibold text-gray-800 mb-2">How do I choose the right piece?</p>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  Focus on metal tone, scale and how the piece will layer with what you already wear.
-                </p>
-              </div>
-              <div>
-                <p className="font-semibold text-gray-800 mb-2">What does affiliate mean?</p>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  We earn a small commission when you buy through our links, at no extra cost to you.
-                </p>
-              </div>
-              <div>
-                <p className="font-semibold text-gray-800 mb-2">Can I return items?</p>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  Yes. Returns are handled by the retailer, so please review their policy during checkout.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
       </main>
     </>
   );

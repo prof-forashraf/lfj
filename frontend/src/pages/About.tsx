@@ -126,38 +126,6 @@ const About: React.FC = () => {
           </motion.section>
 
           <motion.section
-            className="mb-20 bg-amber-50 rounded-3xl border border-amber-100 p-8"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            variants={sectionVariants}
-          >
-            <div className="max-w-4xl mx-auto text-center">
-              <p className="text-sm uppercase tracking-[0.3em] text-amber-600 mb-3">How we work</p>
-              <h2 className="text-3xl font-playfair font-bold text-dark-slate mb-4">
-                Curated recommendations, transparent guidance
-              </h2>
-              <p className="text-gray-700 leading-relaxed mb-8">
-                We carefully review every piece for design, materials and seller reputation. Our recommendations are selected to help you find jewellery that feels special, wearable and true to your personal style.
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                <div className="rounded-3xl bg-white p-6 shadow-sm border border-amber-100">
-                  <h3 className="font-semibold text-dark-slate mb-2">Selective curation</h3>
-                  <p className="text-sm text-gray-600">We highlight only the pieces that meet our standards for style, finish and gifting appeal.</p>
-                </div>
-                <div className="rounded-3xl bg-white p-6 shadow-sm border border-amber-100">
-                  <h3 className="font-semibold text-dark-slate mb-2">Thoughtful transparency</h3>
-                  <p className="text-sm text-gray-600">We may earn a commission from qualifying purchases, and that helps us keep offering honest, curated guidance.</p>
-                </div>
-                <div className="rounded-3xl bg-white p-6 shadow-sm border border-amber-100">
-                  <h3 className="font-semibold text-dark-slate mb-2">Confidence-first service</h3>
-                  <p className="text-sm text-gray-600">Our aim is to make shopping easy, enjoyable and informed, whether you're buying for yourself or as a gift.</p>
-                </div>
-              </div>
-            </div>
-          </motion.section>
-
-          <motion.section
             className="mb-20"
             initial="hidden"
             whileInView="visible"

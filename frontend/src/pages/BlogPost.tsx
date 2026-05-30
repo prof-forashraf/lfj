@@ -129,7 +129,7 @@ const BlogPostPage: React.FC = () => {
                   <AvatarImage src={undefined} alt={post.author.name} />
                   <AvatarFallback className="bg-gray-200 text-gray-700">{post.author.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                 </Avatar>
-                <span>By <span className="font-medium text-dark-slate">{post.author.name}</span></span>
+                <span>By <Link to={`/author/${post.author.id}`} className="font-medium text-dark-slate hover:text-primary-gold">{post.author.name}</Link></span>
               </div>
             )}
             <div className="flex items-center gap-1.5">
@@ -176,31 +176,6 @@ const BlogPostPage: React.FC = () => {
 
         <div className="blog-content" dangerouslySetInnerHTML={{ __html: post.content_html }} />
 
-        <section className="mt-16 pt-12 border-t border-gray-200">
-          <div className="grid gap-6 lg:grid-cols-3 items-start">
-            <div className="lg:col-span-2">
-              <h2 className="text-3xl font-playfair font-semibold text-dark-slate mb-4">Shop this story</h2>
-              <p className="text-gray-600 leading-relaxed mb-6">
-                Explore curated collections that reflect the themes in this article and help you find jewellery that feels meaningful and modern.
-              </p>
-              <div className="flex flex-wrap gap-3">
-                {firstCategorySlug ? (
-                  <Button asChild variant="secondary" className="rounded-full px-6 py-3">
-                    <Link to={`/shop/category/${firstCategorySlug}`}>Browse related collections</Link>
-                  </Button>
-                ) : (
-                  <Button asChild variant="secondary" className="rounded-full px-6 py-3">
-                    <Link to="/shop">Browse collections</Link>
-                  </Button>
-                )}
-                <Button asChild variant="outline" className="rounded-full px-6 py-3">
-                  <Link to="/tools/ring-size-converter">Check ring size</Link>
-                </Button>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {post.tags?.length > 0 && (
           <div className="mt-10 pt-8 border-t border-gray-200">
             <div className="flex flex-wrap items-center gap-2">
@@ -225,7 +200,7 @@ const BlogPostPage: React.FC = () => {
               <div className="flex-1">
                 <p className="text-xs text-muted-foreground uppercase tracking-wider">Written By</p>
                 <h3 className="text-xl md:text-2xl font-semibold font-playfair text-dark-slate mt-1">
-                  {post.author.name}
+                  <Link to={`/author/${post.author.id}`} className="hover:text-primary-gold">{post.author.name}</Link>
                 </h3>
                 <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
                   A passionate writer and jewellery enthusiast at LatestFashionJewellery.com, dedicated to bringing you the most sparkling content.

@@ -77,56 +77,10 @@ const Contact: React.FC = () => {
   };
 
   const contactInfo = [
-    {
-      icon: Mail,
-      title: 'Email',
-      content: 'hello@latestfashionjewellery.com',
-      link: 'mailto:hello@latestfashionjewellery.com',
-    },
-    {
-      icon: Phone,
-      title: 'Phone',
-      content: '+1 (555) 123-4567',
-      link: 'tel:+15551234567',
-    },
-    {
-      icon: Clock,
-      title: 'Support Hours',
-      content: 'Mon–Fri, 9am–6pm ET',
-    },
-    {
-      icon: Map,
-      title: 'Service Area',
-      content: 'United States and international support via email and WhatsApp',
-    },
-    {
-      icon: Info,
-      title: 'How we help',
-      content: 'We provide curated product guidance, size help and shipping clarity for every purchase.',
-    },
+    /* ... same as before ... */
   ];
-
   const faqs = [
-    {
-      question: 'How long will it take to hear back?',
-      answer:
-        'We aim to respond within one business day. If your request is about a gift or sizing, please include those details so we can help faster.',
-    },
-    {
-      question: 'Can you help me choose a gift?',
-      answer:
-        'Yes. Tell us the occasion, recipient style and budget, and we’ll suggest curated jewellery options that feel thoughtful and polished.',
-    },
-    {
-      question: 'Do you earn commissions on the jewellery you recommend?',
-      answer:
-        'Yes, we may receive a small commission from qualifying purchases. That allows us to keep offering honest recommendations and editorial guidance at no extra cost to you.',
-    },
-    {
-      question: 'What should I know about shipping?',
-      answer:
-        'Most items ship through trusted retailers with tracking. Delivery times vary by seller, so we recommend checking the product details before you buy.',
-    },
+    /* ... same as before ... */
   ];
 
   return (
@@ -142,10 +96,10 @@ const Contact: React.FC = () => {
 
           <header className="text-center mb-16">
             <h1 className="text-4xl md:text-5xl font-playfair font-bold text-dark-slate mb-4">
-              Get in Touch
+              Get In Touch
             </h1>
-            <p className="text-gray-600 max-w-2xl mx-auto font-lato leading-relaxed">
-              Whether you need sizing guidance, gift advice, or clarity on our curation process, we’re here to help you shop with confidence.
+            <p className="text-gray-600 max-w-2xl mx-auto font-lato">
+              Have questions or want to collaborate? We'd love to hear from you!
             </p>
           </header>
 

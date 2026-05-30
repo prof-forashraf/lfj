@@ -20,14 +20,6 @@ import { getPlaceholderImageUrl } from '@/lib/imageUrl';
 
 const ShopCollection: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
-  const collectionName = slug
-    ? slug
-        .split('-')
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ')
-    : 'Collection';
-
-  const collectionIntroText = `Our ${collectionName.toLowerCase()} collection is curated for timeless style, thoughtful gifting and everyday polish. Each piece has been selected to work well on its own or layered with your current favourites. When choosing, consider the occasion and your preferred metal tone so the jewellery feels personal and effortless. If you're not sure where to start, browse related categories or read our styling notes for a smoother choice.`;
   
   // Fetch collection details  
   const { data: products = [], isLoading: loadingProducts, isError: productsError } = useQuery({
@@ -89,16 +81,8 @@ const ShopCollection: React.FC = () => {
 
         {/* Collection Header */}
         <div className="mb-10">
-          <h1 className="text-3xl font-bold text-navy-800">{collectionName} Collection</h1>
-          <p className="text-gray-600 mt-2 max-w-2xl leading-relaxed">
-            {collectionIntroText}
-          </p>
-          <p className="text-sm text-gray-500 mt-4 max-w-2xl">
-            Perfect for special moments, elegant everyday style and anyone who loves jewellery with refined presence.
-          </p>
-          <div className="mt-4 text-sm text-gray-500 max-w-2xl">
-            We partner with trusted retailers for secure checkout and reliable delivery. Our selections are chosen for design, value and everyday wearability.
-          </div>
+          <h1 className="text-3xl font-bold text-navy-800">{slug?.charAt(0).toUpperCase() + slug?.slice(1)} Collection</h1>
+          <p className="text-gray-600 mt-2 max-w-2xl">Discover our curated selection of {slug} pieces.</p>
         </div>
 
         {/* Products Grid */}
@@ -123,7 +107,7 @@ const ShopCollection: React.FC = () => {
                    <div className="relative h-[250px] overflow-hidden">
                      <img
                        src={product.image_url || getPlaceholderImageUrl()}
-                       alt={product.name || `${collectionName} jewellery item`}
+                       alt={product.name}
                        className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
                        loading="lazy"
                       width={800} height={600} onError={(event) => { event.currentTarget.src = "/images/placeholder.svg"; }} />
@@ -137,7 +121,7 @@ const ShopCollection: React.FC = () => {
                      <h3 className="font-medium text-navy-800 line-clamp-2 mb-1 group-hover:text-teal-600 transition-colors">
                        {product.name}
                      </h3>
-                     <p className="text-sm text-gray-600 line-clamp-2 mb-2">{product.notes || 'A thoughtfully selected jewellery piece'}</p>
+                     <p className="text-sm text-gray-600 line-clamp-2 mb-2">{product.notes || 'Premium quality jewelry piece'}</p>
                    </CardContent>
                  </Card>
             ))}
@@ -152,20 +136,6 @@ const ShopCollection: React.FC = () => {
             </Button>
           </div>
         )}
-
-        <div className="mb-16 rounded-3xl bg-rose-50 border border-rose-100 p-8">
-          <h2 className="text-2xl font-semibold text-navy-800 mb-3">Want a more polished edit?</h2>
-          <p className="text-gray-600 mb-6 max-w-3xl">
-            Explore matching collections and curated categories for gifts, date nights and elevated daily wear.
-          </p>
-          <div className="flex flex-wrap gap-3">
-            {['Necklaces', 'Earrings', 'Bracelets', 'Rings'].map((cat) => (
-              <Button key={cat} variant="outline" asChild>
-                <Link to={`/shop/category/${cat.toLowerCase()}`}>{cat}</Link>
-              </Button>
-            ))}
-          </div>
-        </div>
 
         {/* Related Categories */}
         <div className="mt-16">
@@ -183,34 +153,7 @@ const ShopCollection: React.FC = () => {
               </Button>
             ))}
           </div>
-          <p className="mt-6 text-sm text-gray-600 max-w-3xl">
-            Need styling ideas? <Link to="/blog" className="text-primary hover:underline">Read our jewellery guides</Link> and match your next look with the right category.
-          </p>
         </div>
-
-        <section className="mt-16 bg-gray-50 rounded-3xl border border-gray-200 p-8">
-          <h2 className="text-2xl font-semibold text-navy-800 mb-4">How this collection works</h2>
-          <div className="grid gap-6 md:grid-cols-3">
-            <div>
-              <p className="font-semibold text-gray-800 mb-2">Why these pieces are here</p>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Each product is chosen for its balance of style, wearability and thoughtful detail.
-              </p>
-            </div>
-            <div>
-              <p className="font-semibold text-gray-800 mb-2">What happens at checkout?</p>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                You are redirected to the retailer's site for secure payment and delivery handling.
-              </p>
-            </div>
-            <div>
-              <p className="font-semibold text-gray-800 mb-2">What to do next</p>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Compare the collection with related categories and choose the style that feels most personal.
-              </p>
-            </div>
-          </div>
-        </section>
       </main>
 
     </>

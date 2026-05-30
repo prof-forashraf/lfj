@@ -9,23 +9,23 @@ const HeroSection: React.FC = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const heroContent = [
-    {
-      title: "Define Your Shine",
-      subtitle: "Beautiful jewellery chosen for meaningful moments, effortless style and confident gifting.",
-      cta: "Explore curated pieces",
-      link: "/shop"
+    { 
+      title: "Define Your Shine", 
+      subtitle: "Discover Exquisite Fashion Jewellery That Speaks to Your Soul", 
+      cta: "Explore Collections", 
+      link: "/shop" 
     },
-    {
-      title: "Timeless Elegance",
-      subtitle: "A selective edit of pieces that feel modern, elegant and instantly wearable.",
-      cta: "View elegant styles",
-      link: "/shop"
+    { 
+      title: "Timeless Elegance", 
+      subtitle: "Curated Pieces That Transcend Trends and Embrace Eternal Beauty", 
+      cta: "View Elegant Styles", 
+      link: "/shop" 
     },
-    {
-      title: "Trending Now",
-      subtitle: "A refined edit of jewellery that feels timeless, polished and personal.",
-      cta: "See this season",
-      link: "/shop"
+    { 
+      title: "Trending Now", 
+      subtitle: "The Most Coveted Pieces That Fashion Icons Are Talking About", 
+      cta: "See What's Hot", 
+      link: "/shop" 
     }
   ];
 
@@ -169,9 +169,6 @@ const HeroSection: React.FC = () => {
             <span>Latest Trends</span>
           </Link>
         </div>
-        <p className="mt-4 text-sm text-gray-600 max-w-2xl mx-auto">
-          Each recommendation is selected for quality, polish and confident gifting. We partner with trusted sellers to keep your experience seamless.
-        </p>
       </div>
       
       {/* Enhanced Scroll Indicator */}
