@@ -9,17 +9,29 @@ class DailyMetalPriceRepository
 {
     public function upsert(string $priceDate, string $currency, string $symbol, float $pricePerUnit, string $unit = 'ounce'): DailyMetalPrice
     {
-        return DailyMetalPrice::updateOrCreate(
-            [
-                'price_date' => $priceDate,
-                'base_currency' => strtoupper($currency),
-                'metal_symbol' => strtoupper($symbol),
-            ],
-            [
-                'price_per_unit' => $pricePerUnit,
-                'unit' => $unit,
-            ]
-        );
+        try {
+            return DailyMetalPrice::updateOrCreate(
+                [
+                    'price_date' => $priceDate,
+                    'base_currency' => strtoupper($currency),
+                    'metal_symbol' => strtoupper($symbol),
+                ],
+                [
+                    'price_per_unit' => $pricePerUnit,
+                    'unit' => $unit,
+                ]
+            );
+        } catch (\Illuminate\Database\QueryException $e) {
+            // Handle rare duplicate-key race by returning the existing record.
+            if (strpos($e->getMessage(), 'Duplicate entry') !== false) {
+                return DailyMetalPrice::where('price_date', $priceDate)
+                    ->where('base_currency', strtoupper($currency))
+                    ->where('metal_symbol', strtoupper($symbol))
+                    ->first();
+            }
+
+            throw $e;
+        }
     }
 
     public function latestForSymbols(array $symbols, string $currency = 'USD'): Collection

@@ -47,5 +47,16 @@ class GoldPrice extends Model
     protected $casts = [
         'date_recorded' => 'date',
         'is_active' => 'boolean',
+        'price_per_ounce' => 'float',
+        'price_per_gram_24k' => 'float',
+        'price_per_gram_22k' => 'float',
+        'price_per_gram_18k' => 'float',
+        'price_per_gram_14k' => 'float',
+        'price_per_gram_10k' => 'float',
+        'market_open' => 'float',
+        'market_high' => 'float',
+        'market_low' => 'float',
+        'market_close' => 'float',
+        'volume' => 'float',
     ];
 }
