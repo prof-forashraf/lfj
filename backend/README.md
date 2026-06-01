@@ -59,3 +59,12 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Local admin helpers
+
+This project includes an Artisan helper to mark products as featured for local or admin use:
+
+- `php artisan products:feature --count=8` — mark top N active products as featured
+- `php artisan products:feature --ids=1,2,3` — mark specific product ids as featured
+
+Run `php artisan list` to see the command registered under the `products` namespace.

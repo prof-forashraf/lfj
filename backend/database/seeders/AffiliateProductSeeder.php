@@ -1258,5 +1258,20 @@ Fine Jewelry Gifts for Her: Celebrate the special woman in your life with this s
                 $productData
             );
         }
+
+        // Ensure a small default set of featured products exists after seeding
+        $defaultFeaturedCount = 8;
+        $existingFeatured = AffiliateProduct::where('is_featured', 1)->count();
+        if ($existingFeatured === 0) {
+            $ids = AffiliateProduct::where('status', 'active')
+                ->orderBy('created_at', 'asc')
+                ->limit($defaultFeaturedCount)
+                ->pluck('id')
+                ->toArray();
+
+            if (!empty($ids)) {
+                AffiliateProduct::whereIn('id', $ids)->update(['is_featured' => 1]);
+            }
+        }
     }
 }
