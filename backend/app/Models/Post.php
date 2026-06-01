@@ -92,9 +92,24 @@ class Post extends Model
     protected function imageUrl(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->featured_image
-            ? Storage::disk('public')->url($this->featured_image)
-            : url('/images/placeholder.png')
+            get: function () {
+                if ($this->featured_image) {
+                    return Storage::disk('public')->url($this->featured_image);
+                }
+
+                if ($this->featured_image_url_snapshot) {
+                    return Str::startsWith($this->featured_image_url_snapshot, ['http://', 'https://', '//'])
+                        ? $this->featured_image_url_snapshot
+                        : Storage::disk('public')->url(ltrim($this->featured_image_url_snapshot, '/'));
+                }
+
+                $fallbackPath = "post-featured-images/{$this->id}.jpg";
+                if (Storage::disk('public')->exists($fallbackPath)) {
+                    return Storage::disk('public')->url($fallbackPath);
+                }
+
+                return url('/images/placeholder.png');
+            }
         );
     }
 

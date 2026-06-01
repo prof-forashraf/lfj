@@ -98,14 +98,32 @@ export const jewelleryService = {
   getProductsByCollection: async (collectionType: string): Promise<AffiliateProduct[]> => {
     try {
       const normalized = collectionType?.toLowerCase();
-      let response;
 
       if (normalized === 'featured') {
-        response = await apiClient.get<{ data: AffiliateProduct[] }>(`/products/featured?limit=20`);
-      } else if (normalized === 'random') {
+        const response = await apiClient.get<{ data: AffiliateProduct[] }>(`/products/featured?limit=20`);
+        const featuredProducts = response?.data?.data || [];
+
+        if (featuredProducts.length > 0) {
+          return featuredProducts;
+        }
+
+        console.warn("Featured collection is empty. Falling back to latest arrivals.");
+        const fallback = await apiClient.get<PaginatedAffiliateProductsResponse>(`/products`, {
+          params: {
+            per_page: 20,
+            sort_by: 'created_at',
+            sort_order: 'desc',
+          },
+        });
+        return fallback.data.data || [];
+      }
+
+      let response;
+
+      if (normalized === 'random') {
         response = await apiClient.get<{ data: AffiliateProduct[] }>(`/products/random?limit=20`);
       } else if (normalized === 'studio') {
-        response = await apiClient.get<{ data: AffiliateProduct[] }>(`/products/studio?limit=20`);
+        response = await apiClient.get<{ data: AffiliateProduct[] }>(`/products/studio?limit=20&collection=1`);
       } else if (normalized === 'new-arrivals') {
         const paginated = await apiClient.get<PaginatedAffiliateProductsResponse>(`/products`, {
           params: {
@@ -114,7 +132,7 @@ export const jewelleryService = {
             sort_order: 'desc',
           },
         });
-        return paginated.data.data;
+        return paginated.data.data || [];
       } else {
         response = await apiClient.get<{ data: AffiliateProduct[] }>(`/products/featured?limit=20`);
       }

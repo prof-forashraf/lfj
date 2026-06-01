@@ -3,6 +3,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
+import ProductImage from '@/components/ui/ProductImage';
 import { Category } from '@/services/categoryService'; // Your existing type
 import { ArrowRight } from 'lucide-react';
 
@@ -20,13 +21,14 @@ const ShopByCategory: React.FC<ShopByCategoryProps> = ({ categories }) => {
             <Link to={`/shop/category/${category.slug}`} key={category.id} className="group block">
               <Card className="overflow-hidden border-gray-200 shadow-sm hover:shadow-xl transition-shadow duration-300 rounded-lg">
                 <div className="relative h-64">
-                 <img 
-                   src={category.image} 
-                   alt={category.name} 
-                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
-                   loading="lazy"
-                   decoding="async"
-                   width={800} height={600} onError={(event) => { event.currentTarget.src = "/images/placeholder.svg"; }} />
+                 <ProductImage
+                   src={category.image}
+                   alt={category.name}
+                   fallbackSrc="/images/placeholder.svg"
+                   showViewer={false}
+                   className="absolute inset-0"
+                   ratio={4 / 3}
+                 />
                   <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors duration-300"></div>
                 </div>
                 <div className="p-5 bg-white">

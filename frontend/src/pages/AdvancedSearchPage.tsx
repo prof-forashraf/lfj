@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import SEOMetaTags from '@/components/blog/SEOMetaTags';
+import ProductImage from '@/components/ui/ProductImage';
 
 interface SearchResult {
   id: number;
@@ -118,11 +119,17 @@ const AdvancedSearchPage: React.FC = () => {
                     {results.map((product) => (
                       <article key={product.id} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
                         <div className="flex items-start gap-4">
-                          <img
-                            src={product.image_url || '/images/placeholder.svg'}
-                            alt={product.name}
-                            className="h-24 w-24 rounded-3xl object-cover"
-                          />
+                          <div className="h-24 w-24 overflow-hidden rounded-3xl bg-muted/10">
+                            <ProductImage
+                              src={product.image_url}
+                              alt={product.name}
+                              fallbackSrc="/images/placeholder.svg"
+                              ratio={1}
+                              showViewer={true}
+                              className="h-full w-full"
+                              onClick={(event) => event.stopPropagation()}
+                            />
+                          </div>
                           <div className="space-y-2">
                             <h2 className="text-xl font-semibold text-slate-900">{product.name}</h2>
                             <div className="flex flex-wrap gap-2 items-center">

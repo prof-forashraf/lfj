@@ -2,6 +2,7 @@
 import React, { useState, useMemo } from "react";
 import { AffiliateProduct } from "@/services/jewelleryService";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
+import ProductImage from "@/components/ui/ProductImage";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { ExternalLinkIcon, Heart, Star } from "lucide-react";
@@ -53,30 +54,19 @@ const AffiliateProductCard: React.FC<AffiliateProductCardProps> = ({
       {/* The AspectRatio component is now a direct child of the Card. */}
       {/* This allows its size to be calculated correctly, and `object-cover` will work as expected. */}
       <AspectRatio
-        ratio={1} // Keep the 1:1 ratio for a uniform grid
+        ratio={1}
         className="bg-muted/30 overflow-hidden rounded-t-xl"
       >
         {product.image_url ? (
-          <div className="relative w-full h-full">
-            {!imageLoaded && (
-              <div className="absolute inset-0 bg-muted animate-pulse rounded-t-xl" />
-            )}
-            <img
-              src={product.image_url}
-              alt={product.name}
-              className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ${
-                imageLoaded ? "opacity-100" : "opacity-0"
-              }`}
-              loading="lazy"
-              width={600}
-              height={600}
-              onLoad={() => setImageLoaded(true)}
-              onError={(event) => {
-                event.currentTarget.src = "/images/placeholder.svg";
-                setImageLoaded(true);
-              }}
-            />
-          </div>
+          <ProductImage
+            src={product.image_url}
+            imageUrls={product.image_urls}
+            alt={product.name}
+            fallbackSrc="/images/placeholder.svg"
+            showViewer={true}
+            className="transition-transform duration-700"
+            onClick={(event) => event.stopPropagation()}
+          />
         ) : (
           <div className="w-full h-full bg-muted/50 flex items-center justify-center">
             <Star className="w-12 h-12 text-muted-foreground/50" />

@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import ProductImage from "@/components/ui/ProductImage";
 
 interface StandardCarouselProps {
   items: Array<{
@@ -90,11 +91,14 @@ const StandardCarousel: React.FC<StandardCarouselProps> = ({
                 onClick={item.onClick}
               >
                 <div className="relative h-[250px] overflow-hidden">
-                  <img 
-                    src={item.image} 
+                  <ProductImage
+                    src={item.image}
                     alt={item.title}
-                    className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                   loading="lazy" width={800} height={600} onError={(event) => { event.currentTarget.src = "/images/placeholder.svg"; }} />
+                    fallbackSrc="/images/placeholder.svg"
+                    showViewer={true}
+                    className="absolute inset-0"
+                    ratio={4 / 3}
+                  />
                   {item.badge && (
                     <span className="absolute top-2 left-2 bg-teal-500 text-white text-xs px-2 py-1 rounded-full font-medium">
                       {item.badge}

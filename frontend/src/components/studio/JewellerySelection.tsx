@@ -9,6 +9,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import ProductImage from "@/components/ui/ProductImage";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -245,12 +246,14 @@ const JewellerySelection: React.FC<JewellerySelectionProps> = ({
                         ratio={1 / 1}
                         className={viewMode === "grid" ? "" : "w-16"}
                       >
-                        <img
-                          src={item.image_url || ""}
+                        <ProductImage
+                          src={item.image_url || undefined}
                           alt={item.name}
-                          className="object-cover w-full h-full rounded bg-white"
-                          loading="lazy"
-                         width={800} height={600} onError={(event) => { event.currentTarget.src = "/images/placeholder.svg"; }} />
+                          fallbackSrc="/images/placeholder.svg"
+                          showViewer={false}
+                          className="w-full h-full rounded bg-white"
+                          ratio={1}
+                        />
                       </AspectRatio>
                     </div>
                     <div

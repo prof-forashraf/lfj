@@ -46,7 +46,7 @@ class CategoryController extends Controller
                     'name' => $officialCategory->name,
                     'slug' => $officialCategory->slug,
                     'description' => $officialCategory->description,
-                    'image' => $officialCategory->image ? Storage::url($officialCategory->image) : null,
+                    'image' => $this->resolveCategoryImageUrl($officialCategory->image, $officialCategory->slug),
                     'productCount' => $productCount->count,
                 ];
             }
@@ -56,7 +56,7 @@ class CategoryController extends Controller
                 'name' => ucfirst($itemType),
                 'slug' => $itemType,
                 'description' => null,
-                'image' => null,
+                'image' => $this->resolveCategoryImageUrl(null, $itemType),
                 'productCount' => $productCount->count,
             ];
         });
@@ -111,5 +111,20 @@ class CategoryController extends Controller
             ->paginate($request->input('per_page', 12));
 
         return new AffiliateProductCollection($products);
+    }
+
+    private function resolveCategoryImageUrl(?string $image, string $slug): string
+    {
+        if ($image) {
+            return Storage::disk('public')->url($image);
+        }
+
+        $fallbackPath = "categories/{$slug}.jpg";
+
+        if (Storage::disk('public')->exists($fallbackPath)) {
+            return Storage::disk('public')->url($fallbackPath);
+        }
+
+        return url('/images/category-placeholder.png');
     }
 }

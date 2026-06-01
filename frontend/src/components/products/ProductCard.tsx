@@ -3,7 +3,8 @@ import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AffiliateProduct } from "@/services/affiliateProductService";
-import { getPlaceholderImageUrl } from '@/lib/imageUrl';
+import ProductImage from "@/components/ui/ProductImage";
+import { getPlaceholderImageUrl } from "@/lib/imageUrl";
 import { Star, ExternalLink } from "lucide-react";
 
 interface ProductCardProps {
@@ -28,31 +29,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         rel="noopener sponsored"
         className="block"
       >
-        <div className="relative aspect-square overflow-hidden bg-gray-50">
-          {hasMultipleSizes ? (
-            <picture>
-              <source
-                media="(min-width: 768px)"
-                srcSet={product.image_urls.medium!}
-                type="image/webp"
-              />
-              <source srcSet={product.image_urls.small!} type="image/webp" />
-              <img
-                src={product.image_urls.medium!}
-                alt={product.name}
-                className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 p-6"
-                loading="lazy"
-               width={800} height={600} onError={(event) => { event.currentTarget.src = "/images/placeholder.svg"; }} />
-            </picture>
-          ) : (
-            <img
-              src={product.image_url || getPlaceholderImageUrl()}
-              alt={product.name}
-              className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 p-6"
-              loading="lazy"
-             width={800} height={600} onError={(event) => { event.currentTarget.src = "/images/placeholder.svg"; }} />
-          )}
-        </div>
+        <ProductImage
+          src={product.image_url}
+          imageUrls={product.image_urls}
+          alt={product.name}
+          fallbackSrc={getPlaceholderImageUrl()}
+          ratio={1}
+          showViewer={true}
+          className="bg-gray-50"
+          onClick={(event) => event.stopPropagation()}
+        />
       </a>
       <div className="p-4 text-center flex-grow flex flex-col justify-between">
         <div>

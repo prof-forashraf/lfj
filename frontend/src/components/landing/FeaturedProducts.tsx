@@ -1,6 +1,5 @@
   // src/components/landing/FeaturedProducts.tsx
-  import React from 'react';
-  import { Card, CardContent } from '@/components/ui/card';
+  import React from 'react';import ProductImage from '@/components/ui/ProductImage';  import { Card, CardContent } from '@/components/ui/card';
   import { Button } from '@/components/ui/button';
   import { AffiliateProduct } from '@/services/affiliateProductService';
   import { Sparkles, Star, Heart, ExternalLink } from 'lucide-react';
@@ -44,19 +43,14 @@
 
                 <CardContent className="p-0 flex-grow flex flex-col">
                   {/* Product Image */}
-                  <div className="relative aspect-square overflow-hidden rounded-t-xl bg-muted/30">
-                    <img 
-                      src={product.image_url || 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop'} 
-                      alt={product.name} 
-                      className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 p-6" 
-                      loading="lazy"
-                      decoding="async"
-                      width={400}
-                      height={400}
-                      onError={(event) => { event.currentTarget.src = '/images/placeholder.svg'; }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  </div>
+                  <ProductImage
+                    src={product.image_url || 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop'}
+                    alt={product.name}
+                    fallbackSrc="/images/placeholder.svg"
+                    ratio={1}
+                    showViewer={true}
+                    className="rounded-t-xl"
+                  />
 
                   {/* Product Info */}
                   <div className="p-6 flex-grow flex flex-col justify-between">

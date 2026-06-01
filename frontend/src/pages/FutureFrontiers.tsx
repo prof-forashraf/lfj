@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Rocket, Atom, Zap, ArrowLeft, Brain, Leaf, Star, Microscope, Cpu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import ProductImage from '@/components/ui/ProductImage';
 
 const FutureFrontiers: React.FC = () => {
   const { scrollYProgress } = useScroll();
@@ -623,11 +624,14 @@ const FutureFrontiers: React.FC = () => {
                 >
                   <Card className="bg-black/50 border-luxury-gold/30 backdrop-blur-sm overflow-hidden hover:border-luxury-gold/60 transition-all duration-300 hover:scale-105">
                     <div className="relative overflow-hidden">
-                      <img
+                      <ProductImage
                         src={product.image}
                         alt={product.name}
-                        className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
-                       loading="lazy" width={800} height={600} onError={(event) => { event.currentTarget.src = "/images/placeholder.svg"; }} />
+                        fallbackSrc="/images/placeholder.svg"
+                        showViewer={true}
+                        className="absolute inset-0"
+                        ratio={4 / 3}
+                      />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                       <div className="absolute top-4 right-4">
                         <Rocket className="w-6 h-6 text-luxury-gold" />

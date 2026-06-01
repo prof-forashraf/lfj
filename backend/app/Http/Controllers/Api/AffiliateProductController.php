@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AffiliateProductCollection;
 use App\Http\Resources\AffiliateProductResource;
-use App\Http\Resources\StudioProductResource;
 use App\Models\AffiliateProduct;
 use App\Services\AnalyticsService;
 use Illuminate\Http\Request;
@@ -94,8 +93,11 @@ class AffiliateProductController extends Controller
     }
     public function getStudioProducts(Request $request): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
-        $query = AffiliateProduct::where('status', 'active')
-            ->whereNotNull('try_on_image_url');
+        $query = AffiliateProduct::where('status', 'active');
+
+        if (! $request->boolean('collection', false)) {
+            $query->whereNotNull('try_on_image_url');
+        }
 
         if ($request->has('search') && $request->input('search') !== '') {
             $searchTerm = $request->input('search');
@@ -107,15 +109,13 @@ class AffiliateProductController extends Controller
 
             // Apply sorting only to search results
             $items = $query->orderBy('updated_at', 'desc')->get();
-
         } else {
             // Apply random order only when there is no search
-            $items = $query->inRandomOrder()->limit(12)->get();
+            $limit = min($request->input('limit', 12), 50);
+            $items = $query->inRandomOrder()->limit($limit)->get();
         }
 
-        // $items = $query->orderBy('updated_at', 'desc')->get(); // <-- DELETE THIS LINE
-
-        return StudioProductResource::collection($items);
+        return AffiliateProductResource::collection($items);
     }
 
 

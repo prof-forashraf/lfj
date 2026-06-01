@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import SEOMetaTags from '@/components/blog/SEOMetaTags';
 import { useWishlist } from '@/hooks/useWishlist';
+import ProductImage from '@/components/ui/ProductImage';
 
 const Wishlist: React.FC = () => {
   const { items, removeFromWishlist, clearWishlist } = useWishlist();
@@ -68,11 +69,15 @@ const Wishlist: React.FC = () => {
                   <Card key={item.id} className="card-elegant group h-full flex flex-col">
                     <CardContent className="p-0 flex-grow flex flex-col">
                       <div className="relative aspect-square overflow-hidden rounded-t-2xl bg-muted/30">
-                        <img
-                          src={item.image_url || 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&h=400&fit=crop'}
+                        <ProductImage
+                          src={item.image_url}
                           alt={item.name}
-                          className="w-full h-full object-contain p-6 group-hover:scale-110 transition-transform duration-700"
-                         loading="lazy" width={800} height={600} onError={(event) => { event.currentTarget.src = "/images/placeholder.svg"; }} />
+                          fallbackSrc="/images/placeholder.svg"
+                          ratio={1}
+                          showViewer={true}
+                          className="h-full w-full"
+                          onClick={(event) => event.stopPropagation()}
+                        />
                         <Button
                           variant="ghost"
                           size="icon"

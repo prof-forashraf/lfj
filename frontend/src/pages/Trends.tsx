@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
+import ProductImage from '@/components/ui/ProductImage';
 
 const Trends: React.FC = () => {
   const trendingStyles = [
@@ -118,11 +119,14 @@ const Trends: React.FC = () => {
               {trendingStyles.map((style, index) => (
                 <Card key={index} className="overflow-hidden border-luxury-gold/20 hover:shadow-xl transition-all duration-300 group">
                   <div className="relative h-64 overflow-hidden">
-                    <img 
-                      src={style.image} 
+                    <ProductImage
+                      src={style.image}
                       alt={style.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                     loading="lazy" width={800} height={600} onError={(event) => { event.currentTarget.src = "/images/placeholder.svg"; }} />
+                      fallbackSrc="/images/placeholder.svg"
+                      showViewer={false}
+                      className="absolute inset-0"
+                      ratio={16 / 9}
+                    />
                     <div className="absolute top-4 right-4">
                       <Badge className="bg-luxury-gold text-white font-semibold">
                         {style.trend}

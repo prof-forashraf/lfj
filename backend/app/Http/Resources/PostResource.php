@@ -20,7 +20,7 @@ class PostResource extends JsonResource
             'slug' => $this->slug,
             'content_html' => (string) $this->content,
             'excerpt' => (string) $this->excerpt,
-            'featured_image_url' => $this->featured_image ? Storage::disk('public')->url($this->featured_image) : null,
+            'featured_image_url' => $this->resolveFeaturedImageUrl(),
             'status' => $this->status,
             'published_at_iso' => $this->published_at ? $this->published_at->toIso8601String() : null,
             'published_at_formatted' => $this->published_at ? $this->published_at->format('F j, Y') : 'Not Published',
@@ -32,5 +32,24 @@ class PostResource extends JsonResource
             'created_at_human' => $this->created_at->diffForHumans(),
             'updated_at_iso' => $this->updated_at->toIso8601String(),
         ];
+    }
+
+    private function resolveFeaturedImageUrl(): ?string
+    {
+        if ($this->featured_image) {
+            return Storage::disk('public')->url($this->featured_image);
+        }
+
+        if ($this->featured_image_url_snapshot) {
+            return Str::startsWith($this->featured_image_url_snapshot, ['http://', 'https://', '//'])
+                ? $this->featured_image_url_snapshot
+                : Storage::disk('public')->url(ltrim($this->featured_image_url_snapshot, '/'));
+        }
+
+        $fallbackPath = "post-featured-images/{$this->id}.jpg";
+
+        return Storage::disk('public')->exists($fallbackPath)
+            ? Storage::disk('public')->url($fallbackPath)
+            : null;
     }
 }

@@ -24,7 +24,9 @@ class CategoryResource extends JsonResource
             'description' => $this->description,
             'image' => $this->image
                 ? (Str::startsWith($this->image, ['http://', 'https://']) ? $this->image : Storage::disk('public')->url($this->image))
-                : url('/images/category-placeholder.png'),
+                : (Storage::disk('public')->exists("categories/{$this->slug}.jpg")
+                    ? Storage::disk('public')->url("categories/{$this->slug}.jpg")
+                    : url('/images/category-placeholder.png')),
 
             // THIS IS THE FIX: Add 'productCount' and remove 'posts_count'
             'productCount' => $this->when(isset($this->productCount), $this->productCount, 0),

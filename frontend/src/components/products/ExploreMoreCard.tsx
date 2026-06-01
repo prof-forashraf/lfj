@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
+import ProductImage from "@/components/ui/ProductImage";
 
 export const ExploreMoreCard: React.FC = () => {
   return (
@@ -16,11 +17,14 @@ export const ExploreMoreCard: React.FC = () => {
         {/* Card with a background image */}
         <div className="relative h-full flex flex-col items-center justify-center p-6 text-center bg-gray-900 rounded-xl overflow-hidden shadow-lg border border-transparent hover:border-primary-gold transition-all duration-300">
           {/* Background Image with Overlay */}
-          <img
+          <ProductImage
             src="https://images.unsplash.com/photo-1599395359489-94b62ced2a55?q=80&w=800&auto=format&fit=crop"
             alt="Explore more jewellery"
-            className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-30 group-hover:scale-110 transition-all duration-500"
-           loading="lazy" width={800} height={600} onError={(event) => { event.currentTarget.src = "/images/placeholder.svg"; }} />
+            fallbackSrc="/images/placeholder.svg"
+            showViewer={false}
+            className="absolute inset-0 opacity-20 group-hover:opacity-30"
+            ratio={16 / 9}
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
 
           {/* Content */}
